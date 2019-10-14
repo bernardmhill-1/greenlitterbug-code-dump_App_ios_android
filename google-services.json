@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "848857571941",
+    "firebase_url": "https://greenlitterbug-e08e1.firebaseio.com",
+    "project_id": "greenlitterbug-e08e1",
+    "storage_bucket": "greenlitterbug-e08e1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:848857571941:android:0dcc3194fbea0e84",
+        "android_client_info": {
+          "package_name": "com.green.litterbug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "848857571941-fip1u4rkb34gclqu9834s7jrgr0cirav.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB2hv-itWN7BGCMTGJ9r2wpso1-z9yQa1U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "848857571941-fip1u4rkb34gclqu9834s7jrgr0cirav.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

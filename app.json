@@ -1,0 +1,49 @@
+{
+  "expo": {
+    "name": "Green Litter Bug",
+    "slug": "green-litter-bug",
+    "privacy": "public",
+    "sdkVersion": "34.0.0",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/img/icon-512x512.png",
+    "splash": {
+      "image": "./assets/img/splash/splash_480x800.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#334058"
+    },
+    "updates": {
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.green.litterbug"
+    },
+    "android": {
+      "package": "com.green.litterbug",
+      "googleServicesFile": "./google-services.json",
+      "splash": {
+        "backgroundColor": "#334058",
+        "resizeMode": "cover",
+        "mdpi": "./assets/img/splash/splash_480x800.png",
+        "hdpi": "./assets/img/splash/splash_720x1200.png",
+        "xhdpi": "./assets/img/splash/splash_960x1600.png",
+        "xxhdpi": "./assets/img/splash/splash_1440x2400.png",
+        "xxxhdpi": "./assets/img/splash/splash_1920x3200.png"
+      }
+    },
+    "androidStatusBar": {
+      "barStyle": "light-content",
+      "backgroundColor": "#334058"
+    }
+  }
+}

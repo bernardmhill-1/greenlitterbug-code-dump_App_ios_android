@@ -1,0 +1,16 @@
+image: registry.michelada.io/gibran/checkinar-mobile-app:latest
+
+cache:
+  paths:
+  - node_modules
+
+stages:
+  - test
+
+before_script:
+  - yarn
+
+test:
+  stage: test
+  script:
+    - yarn test-ci
