@@ -67,7 +67,7 @@ export default class ProductUpload extends React.Component {
     company_name: '',
     product_Category: '',
     location_value: '',
-    barCode_data: '',
+    // barCode_data: '',
     remainReward: '',
     filename: '',
     type: '',
@@ -117,8 +117,8 @@ export default class ProductUpload extends React.Component {
     this.setState({ product_Category })
     const location_value = this.props.navigation.state.params.location;
     this.setState({ location_value })
-    const barCode_data = this.props.navigation.state.params.BarCodeData;
-    this.setState({ barCode_data })
+    // const barCode_data = this.props.navigation.state.params.BarCodeData;
+    // this.setState({ barCode_data })
     this.props.navigation.setParams({
       cartCount: this.state.cartCount,
     });
@@ -158,7 +158,6 @@ export default class ProductUpload extends React.Component {
           );
         } else {
           if (r.response_code == 2000) {
-            // Alert.alert('Success', r.response_message);
             this.setState({ productTypeList: r.response_data, loading: false, isMounted: true }, () => {
               r.response_data.map(cat => {
                 categoryMod.push({ label: cat.productTypeName, value: cat._id })
@@ -182,7 +181,6 @@ export default class ProductUpload extends React.Component {
   getPermissionAsync = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
     if (status !== 'granted') {
-      // alert('Sorry, we need camera roll permissions to make this work!');
       (Platform.OS === 'android' ? Alert : AlertIOS).alert('Sorry', 'we need camera roll permissions to make this work!');
     }
 
@@ -268,7 +266,7 @@ export default class ProductUpload extends React.Component {
     formData.append('companyName', this.state.company_name);
     formData.append('binCode', this.state.product_Category);
     formData.append('place', this.state.location_value);
-    formData.append('barCode', this.state.barCode_data)
+    formData.append('barCode',null)
     this.setState({ loading: true });
 
     await fetch('https://nodeserver.brainiuminfotech.com:1924/api/recyclingProductAdd', {
@@ -303,8 +301,6 @@ export default class ProductUpload extends React.Component {
             //   this.props.navigation.navigate('Home')
             // })
           })
-
-          // Alert.alert("Success!", (response.response_message));
 
         } else {
           if (response.response_code === 4000) {
@@ -349,6 +345,7 @@ export default class ProductUpload extends React.Component {
       label: 'Choose Product Type',
       value: null,
       color: '#9EA0A4',
+      fontSize:10
     };
     const { categoryList,image1,productType } = this.state;
     if (this.state.isMounted === false) {

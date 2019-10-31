@@ -1,6 +1,6 @@
 import { NetInfo } from 'react-native';
 import AppConfig from '../config';
-
+import qs from 'qs'
 const url = AppConfig.apiLoc;
 var apiCalls = {};
 // let error = 'Uh oh, something has gone wrong. Please tweet us @randomapi about the issue. Thank you.'
@@ -1016,6 +1016,36 @@ apiCalls.contactUs = (data, cb) => {
           lastName: data.lastName,
           email: data.email,
           message: data.message
+        }),
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+          cb(null, responseJson)
+        })
+        .catch((error) => {
+          cb(error);
+        });
+    }
+    else {
+      alert('You are Offline. Please check your connection.')
+    }
+  });
+}
+
+apiCalls.searchRecyclingProduct = (data, cb) => {
+  console.log('Apidata',data)
+  NetInfo.isConnected.fetch().then(isConnected => {
+    if (isConnected) {
+      fetch(url + '/searchRecyclingProduct', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          "cache-control": "no-cache",
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'authtoken': data.userToken
+        },
+        body: qs.stringify({
+          barcode: data.barCode,
         }),
       })
         .then((response) => response.json())

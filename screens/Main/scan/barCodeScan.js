@@ -20,6 +20,7 @@ import * as Permissions from 'expo-permissions';
 import { CustomButton } from '../../../components/Button'
 import { CartCount } from '../../../components/cartCounter'
 
+const api = require('../../../api/index');
 const { width } = Dimensions.get('window')
 const qrSize = width * 0.7
 
@@ -58,6 +59,7 @@ export default class BarCodeScan extends React.Component {
     scanned: false,
     modalVisible: false,
     data: '',
+    barCodeDetails: '',
     cartCount: 0
   };
 
@@ -107,25 +109,26 @@ export default class BarCodeScan extends React.Component {
   }
 
 
-  handleBarCodeScanned = ({ type, data }) => {
-    if (!data) {
+  handleBarCodeScanned = ({ data }) => {
+    if (!data ) {
       alert('Invalid BAR code')
     } else {
-      this.setState({ scanned: true, data: data}, () => {
+      this.setState({ scanned: true, data: data }, () => {
         this.setModalVisible(!this.state.modalVisible);
+        this.searchRecyclingProduct();
       });
     }
   };
 
-  scanComplete = () => {
-    const { data, company_name, product_Category, location_value } = this.state
-    this.props.navigation.navigate('ProductUpload', {
-      companyName: company_name,
-      productCategory: product_Category,
-      location: location_value,
-      BarCodeData: data
-    })
-  }
+  // scanComplete = () => {
+  //   const { data, company_name, product_Category, location_value } = this.state
+  //   this.props.navigation.navigate('ProductUpload', {
+  //     companyName: company_name,
+  //     productCategory: product_Category,
+  //     location: location_value,
+  //     BarCodeData: data
+  //   })
+  // }
 
   skipScan = () => {
     const { company_name, product_Category, location_value } = this.state
@@ -137,8 +140,148 @@ export default class BarCodeScan extends React.Component {
   }
 
 
+  searchRecyclingProduct = async () => {
+    const { data } = this.state
+    console.log('barcodeData', data)
+    await api.searchRecyclingProduct({
+      userToken: this.state.userToken,
+      barCode: data
+    },
+      (e, r) => {
+        if (e) {
+          // this.setState({loading: false, isMounted: true})
+          (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+            'Error', e,
+            [
+              {
+                text: 'OK', onPress: () => this.setState({ loading: false })
+              }
+            ]
+          );
+        } else {
+          if (r.response_code == 2000) {
+            this.setState({ barCodeDetails: r.response_data, loading: false, isMounted: true })
+          } else {
+            // this.setState({loading: false, isMounted: true})
+            (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+              'Info', r.response_message,
+              [
+                {
+                  text: 'OK', onPress: () => this.setState({ loading: false })
+                }
+              ]
+            );
+          }
+        }
+      })
+  }
+
+  sendPushFromLocal = async (pushData) => {
+    const message = {
+      to: pushData.deviceToken,
+      sound: 'default',
+      title: 'Points added',
+      body: pushData.body
+    };
+    console.log(message, "push token from barcode");
+
+    const response = await fetch('https://exp.host/--/api/v2/push/send', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Accept-encoding': 'gzip, deflate',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(message),
+    });
+    const data = response._bodyInit;
+    console.log(`Status & Response ID-> ${data}`);
+  }
+
+
+
+  recyclingProductAdd = async () => {
+    let formData = new FormData();
+    formData.append('productImage', null);
+    formData.append('barCodeImage', null);
+    formData.append('user_id', this.state.userId);
+    formData.append('productType', null);
+    formData.append('companyName', this.state.company_name);
+    formData.append('binCode', this.state.product_Category);
+    formData.append('place', this.state.location_value);
+    formData.append('barCode', this.state.data)
+    this.setState({ loading: true });
+
+    await fetch('https://nodeserver.brainiuminfotech.com:1924/api/recyclingProductAdd', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        "cache-control": "no-cache",
+        'Content-Type': 'multipart/form-data',
+        'authtoken': this.state.userToken
+      },
+      body: formData
+    })
+      .then(response => response.json())
+      .then(async (response) => {
+        if (response.response_code === 2000) {
+          const push = response.response_data.pushData
+          this.sendPushFromLocal(push)
+          await AsyncStorage.setItem('remainReward', JSON.stringify(response.response_data.remainReward));
+
+          this.setState({ remainReward: this.state.remainReward }, () => {
+            (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+              'Success', 'Congratulations you have earned 5 points',
+              [
+                {
+                  text: 'OK', onPress: () => this.setState({ loading: false, isMounted: true })
+                }
+              ]
+            );
+            console.log('resycling add data:', response.response_data)
+            this.props.navigation.navigate('Home')
+            // this.setState({ loading: false, isMounted: true }, () => {
+            //   this.props.navigation.navigate('Home')
+            // })
+          })
+
+        } else {
+          if (response.response_code === 4000) {
+            this.setState({ loading: false })
+            this.props.navigation.navigate('Login');
+            //(Platform.OS === 'android' ? Alert : AlertIOS).alert('Token Expired', 'Please login again!');
+            try {
+              AsyncStorage.clear();
+              this.setState({ loading: false });
+            } catch (error) {
+              // (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+              //   'Error', error,
+              //   [
+              //     {
+              //       text: 'OK', onPress: () => this.setState({ loading: false})
+              //     }
+              //   ]
+              // );
+              this.props.navigation.navigate('Login');
+            }
+
+          } else {
+            this.setState({ loading: false, isMounted: true })
+            // (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+            //   'Failed', r.response_message,
+            //   [
+            //     {
+            //       text: 'OK', onPress: () => this.setState({ loading: false })
+            //     }
+            //   ]
+            // );
+          }
+        }
+      })
+  };
+
   render() {
-    const { data } = this.state;
+    const { data, barCodeDetails } = this.state;
     return (
       <View style={{ flex: 1, backgroundColor: '#334259' }}>
         <ScrollView
@@ -151,6 +294,7 @@ export default class BarCodeScan extends React.Component {
             <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 20 }}>Start Scanning Bar Code</Text>
           </View>
 
+        {!barCodeDetails.image && 
           <TouchableOpacity
             style={{ alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: '#fff', backgroundColor: '#1e2c46', marginHorizontal: '20%', paddingVertical: 25, marginBottom: 30, }}
             onPress={() => { this.setModalVisible(!this.state.modalVisible); }}
@@ -160,6 +304,7 @@ export default class BarCodeScan extends React.Component {
               source={require('../../../assets/img/barcode_Scanner/bar_code.png')}
             />
           </TouchableOpacity>
+        }
 
 
           <Modal
@@ -169,7 +314,7 @@ export default class BarCodeScan extends React.Component {
             onRequestClose={() => {
               Alert.alert('Modal has been closed.');
             }}
-          >
+          > 
             <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.6)' }} >
               <BarCodeScanner
                 onBarCodeScanned={this.handleBarCodeScanned}
@@ -188,29 +333,54 @@ export default class BarCodeScan extends React.Component {
             </View>
           </Modal>
 
-          {data ? <View style={{ marginBottom: 40, alignItems: 'center' }} >
-            <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 18 }}>{`Recycle BAR Code: ${data}`} </Text>
+          {barCodeDetails.barcode ? 
+           <View style={{ marginBottom: 40, alignItems: 'center' }} >
+            <View style={{ borderWidth: 2, borderColor: '#3e9126', borderRadius: 10,marginHorizontal:20 }}>
+              <Image
+                source={{ uri:barCodeDetails.image }}
+                resizeMode="cover"
+                style={{ width:215, height:150, alignSelf: 'center', borderRadius: 10 }}
+              />
+            </View>
+            <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 14,marginTop:13,marginBottom:5 }}>{`Recycle BAR Code: ${barCodeDetails.barcode}`} </Text>
+            <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 14 }}>{`Product Name : ${barCodeDetails.name}`} </Text>
           </View> :
             <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Regular', fontSize: 16, marginBottom: 15, marginTop: -10 }}>Tap above to scan Bar code</Text>
           }
-          
-          <View style={{  alignItems: 'center',marginBottom:15,marginHorizontal:22 }}>
-            <Text style={{ textAlign: 'center', color: '#fffeff', fontFamily: 'WS-Regular' }}>If item does not have bar code click SKIP to upload image</Text>
+          <View>
+            
           </View>
+         {
+           barCodeDetails.image ?
+           <View style={{ marginHorizontal: 30, marginHorizontal: '20%', marginBottom: 15 }}>
+           <CustomButton
+             // disabled={this.state.data ? false : true}
+             text="Re-Scan"
+             onClick={() => this.setState({barCodeDetails: ''})}
+           />
+         </View>
 
-          <View style={{ marginHorizontal: 30,marginHorizontal:'20%',marginBottom:15 }}>
-            <CustomButton
-              // disabled={this.state.data ? false : true}
-              text="SKIP"
-              onClick={this.skipScan}
-            />
-          </View>
+         :
+        <>
+       <View style={{ alignItems: 'center', marginBottom: 15, marginHorizontal: 22 }}>
+         <Text style={{ textAlign: 'center', color: '#fffeff', fontFamily: 'WS-Regular' }}>If item does not have bar code click SKIP to upload image</Text>
+       </View>
+
+       <View style={{ marginHorizontal: 30, marginHorizontal: '20%', marginBottom: 15 }}>
+         <CustomButton
+           // disabled={this.state.data ? false : true}
+           text="SKIP"
+           onClick={this.skipScan}
+         />
+       </View>
+       </>
+         }
 
           <View style={{ marginHorizontal: 30 }}>
             <CustomButton
-              disabled={this.state.data ? false : true}
-              text="NEXT"
-              onClick={this.scanComplete}
+              disabled={this.state.barCodeDetails ? false : true}
+              text="Submit"
+              onClick={this.recyclingProductAdd}
             />
           </View>
 
