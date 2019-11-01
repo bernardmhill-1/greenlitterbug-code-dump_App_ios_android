@@ -110,11 +110,11 @@ export default class BarCodeScan extends React.Component {
   }
 
 
-  handleBarCodeScanned = ({ data }) => {
-    if (!data ) {
+  handleBarCodeScanned =({data}) =>{
+    if (!data) {
       alert('Invalid BAR code')
     } else {
-      this.setState({ scanned: true, data:data}, () => {
+      this.setState({ scanned: true, data:data},() => {
         this.setModalVisible(!this.state.modalVisible);
         this.searchRecyclingProduct();
       });

@@ -370,7 +370,7 @@ export default class ProductUpload extends React.Component {
             </View>
 
             <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 15, justifyContent: 'center' }}>
-              <View style={{ flex: 0.2, alignItems: 'center' }}>
+              <View style={{ flex: 0.1, alignItems: 'center' }}>
                 <AntDesign
                   name="select1"
                   size={20}
@@ -378,7 +378,7 @@ export default class ProductUpload extends React.Component {
                 />
               </View>
 
-              <View style={{ flex: 0.8, alignItems: 'flex-start' }}>
+              <View style={{ flex: 0.9, alignItems: 'flex-start' }}>
                 {/* <Picker
                   style={{ width: '93%', color: '#ffffff' }}
                   selectedValue={this.state.productType}

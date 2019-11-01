@@ -28,7 +28,7 @@ const Card = (props) => {
               >
                 <LinearGradient
                   colors={['#3e9126', '#abdf3d',]}
-                  style={{ marginHorizontal: 15, paddingVertical:10, borderRadius: 30 }}
+                  style={{ marginHorizontal: 15, paddingVertical:14, borderRadius:25 }}
                   start={{ x: 0, y: 1 }}
                   end={{ x: 1, y: 1 }}
                 >
