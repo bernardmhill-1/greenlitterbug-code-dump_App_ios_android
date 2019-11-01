@@ -16,6 +16,7 @@ import {
 
 } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import { CustomButton } from '../../../components/Button'
 import { CartCount } from '../../../components/cartCounter'
@@ -92,17 +93,17 @@ export default class BarCodeScan extends React.Component {
       this.setState({ location_value })
       const { status } = await Permissions.askAsync(Permissions.CAMERA);
       this.setState({ hasCameraPermission: status === 'granted' });
-      // this.getPermissionAsync();
+      this.getPermissionAsync();
     })
   }
 
-  // getPermissionAsync = async () => {
-  //   const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-  //   if (status !== 'granted') {
-  //     (Platform.OS === 'android' ? Alert : AlertIOS).alert('Sorry', 'we need camera roll permissions to make this work!');
-  //   }
+  getPermissionAsync = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    if (status !== 'granted') {
+      (Platform.OS === 'android' ? Alert : AlertIOS).alert('Sorry', 'we need camera roll permissions to make this work!');
+    }
 
-  // }
+  }
 
   componentWillUnmount = () => {
     this.willFocusListener.remove();
@@ -113,7 +114,7 @@ export default class BarCodeScan extends React.Component {
     if (!data ) {
       alert('Invalid BAR code')
     } else {
-      this.setState({ scanned: true, data: data }, () => {
+      this.setState({ scanned: true, data:data}, () => {
         this.setModalVisible(!this.state.modalVisible);
         this.searchRecyclingProduct();
       });
@@ -201,6 +202,7 @@ export default class BarCodeScan extends React.Component {
 
 
   recyclingProductAdd = async () => {
+    const {barCodeDetails} = this.state
     let formData = new FormData();
     formData.append('productImage', null);
     formData.append('barCodeImage', null);
@@ -209,7 +211,7 @@ export default class BarCodeScan extends React.Component {
     formData.append('companyName', this.state.company_name);
     formData.append('binCode', this.state.product_Category);
     formData.append('place', this.state.location_value);
-    formData.append('barCode', this.state.data)
+    formData.append('barcodeId', barCodeDetails._id)
     this.setState({ loading: true });
 
     await fetch('https://nodeserver.brainiuminfotech.com:1924/api/recyclingProductAdd', {
@@ -281,7 +283,7 @@ export default class BarCodeScan extends React.Component {
   };
 
   render() {
-    const { data, barCodeDetails } = this.state;
+    const { data, barCodeDetails,scanned } = this.state;
     return (
       <View style={{ flex: 1, backgroundColor: '#334259' }}>
         <ScrollView
@@ -343,7 +345,8 @@ export default class BarCodeScan extends React.Component {
               />
             </View>
             <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 14,marginTop:13,marginBottom:5 }}>{`Recycle BAR Code: ${barCodeDetails.barcode}`} </Text>
-            <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 14 }}>{`Product Name : ${barCodeDetails.name}`} </Text>
+            <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 14,marginBottom:5 }}>{`Product Name : ${barCodeDetails.name}`} </Text>
+            <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 14, }}>{`product Type: ${barCodeDetails.RecyclingProductType}`} </Text>
           </View> :
             <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Regular', fontSize: 16, marginBottom: 15, marginTop: -10 }}>Tap above to scan Bar code</Text>
           }

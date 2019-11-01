@@ -189,7 +189,7 @@ export default class Scan extends React.Component {
 
             {data.productcategory ? <View style={{ marginBottom: 40, alignItems: 'center' }} >
               <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Regular', fontSize: 14, marginBottom: 5 }} >{`Company Name: ${data.companyname}`}</Text>
-              <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 18 }}>{`Product Category: ${data.productcategory}`} </Text>
+              <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 18 }}>{`Bin Category: ${data.productcategory}`} </Text>
               <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 18 }}>{`Location: ${data.location}`} </Text>
             </View> :
               <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Regular', fontSize: 16, marginBottom: 15, marginTop: -10 }}>Tap above to scan QR code</Text>
