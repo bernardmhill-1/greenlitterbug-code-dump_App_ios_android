@@ -14,7 +14,7 @@ import { LinearGradient } from 'expo-linear-gradient';
       >
         <LinearGradient
           colors={disabled  ? ['#808080','#808080'] : ['#3e9126', '#abdf3d',] }
-          style={[ margin === "zero" ? {marginHorizontal:10,paddingVertical: 15, borderRadius: 25} : {marginHorizontal:40,paddingVertical: 15, borderRadius: 30}]}
+          style={[ margin === "zero" ? {marginHorizontal:10,paddingVertical: 13, borderRadius: 24} : {marginHorizontal:40,paddingVertical: 15, borderRadius: 30}]}
           start={{ x: 0, y: 1 }}
           end={{ x: 1, y: 1 }}
         >
@@ -46,7 +46,7 @@ export const  CustomButton1 = props => {
       >
         <LinearGradient
           colors={['#3e9126', '#abdf3d',]}
-          style={{marginHorizontal:30,paddingVertical: 15, borderRadius: 25}}
+          style={{marginHorizontal:30,paddingVertical: 13, borderRadius: 24}}
           start={{ x: 0, y: 1 }}
           end={{ x: 1, y: 1 }}
         >
