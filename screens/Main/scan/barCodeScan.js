@@ -110,10 +110,18 @@ export default class BarCodeScan extends React.Component {
   }
 
 
-  handleBarCodeScanned =({data}) =>{
+  handleBarCodeScanned =({type, data}) => { 
+    console.log("TYPE", type);
+    
     if (!data) {
       alert('Invalid BAR code')
     } else {
+      const os = Platform.OS
+      const checkType = type.toString().includes('EAN-13')
+      if(checkType && os == 'ios') {
+        data =  data.substr(1)
+        console.log("BARCODE", data);
+      }
       this.setState({ scanned: true, data:data},() => {
         this.setModalVisible(!this.state.modalVisible);
         this.searchRecyclingProduct();
