@@ -143,7 +143,6 @@ export default class BarCodeScan extends React.Component {
 
   searchRecyclingProduct = async () => {
     const { data } = this.state
-    console.log('barcodeData', data)
     await api.searchRecyclingProduct({
       userToken: this.state.userToken,
       barCode: data
