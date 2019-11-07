@@ -120,7 +120,9 @@ export default class Login extends React.Component {
           this.setState({ loading: false });
           // alert('Error: ' + e);
         } else {
+          console.log("LOGIN", r);
           if (r.response_code == 2000) {
+       
             this.setData(r);
             this.props.navigation.navigate('Home');
             this.setState({ loading: false })
