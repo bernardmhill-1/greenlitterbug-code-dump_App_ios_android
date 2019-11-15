@@ -18,8 +18,10 @@ import {
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
+import Loader from './../../../navigation/AuthLoadingScreen'
 import { CustomButton } from '../../../components/Button'
 import { CartCount } from '../../../components/cartCounter'
+import SmoothImage from 'smoothimage'
 
 const api = require('../../../api/index');
 const { width } = Dimensions.get('window')
@@ -78,6 +80,8 @@ export default class BarCodeScan extends React.Component {
             userToken: JSON.parse(res[0][1]),
             userId: JSON.parse(res[1][1]),
             cartCount: JSON.parse(res[2][1]),
+            data: '',
+            barCodeDetails: '',
           }, () => {
             this.props.navigation.setParams({
               cartCount: this.state.cartCount,
@@ -86,7 +90,7 @@ export default class BarCodeScan extends React.Component {
         }
       })
       const company_name = this.props.navigation.state.params.companyName;
-      this.setState({ company_name });
+      this.setState({ company_name }, () => this.listner());
       const product_Category = this.props.navigation.state.params.productCategory;
       this.setState({ product_Category })
       const location_value = this.props.navigation.state.params.location;
@@ -95,6 +99,17 @@ export default class BarCodeScan extends React.Component {
       this.setState({ hasCameraPermission: status === 'granted' });
       this.getPermissionAsync();
     })
+  }
+
+  listner = () => {
+    this.props.navigation.addListener('didFocus',
+      (payload) => {
+        const { company_name } = this.state
+        if (company_name == "") {
+          this.props.navigation.navigate('Scan')
+        }
+      }
+    );
   }
 
   getPermissionAsync = async () => {
@@ -110,34 +125,24 @@ export default class BarCodeScan extends React.Component {
   }
 
 
-  handleBarCodeScanned =({type, data}) => { 
+  handleBarCodeScanned = ({ type, data }) => {
     console.log("TYPE", type);
-    
     if (!data) {
       alert('Invalid BAR code')
     } else {
       const os = Platform.OS
       const checkType = type.toString().includes('EAN-13')
-      if(checkType && os == 'ios') {
-        data =  data.substr(1)
+      if (checkType && os == 'ios') {
+        data = data.substr(1)
         console.log("BARCODE", data);
       }
-      this.setState({ scanned: true, data:data},() => {
+      this.setState({ scanned: true, data: data }, () => {
         this.setModalVisible(!this.state.modalVisible);
         this.searchRecyclingProduct();
       });
     }
   };
 
-  // scanComplete = () => {
-  //   const { data, company_name, product_Category, location_value } = this.state
-  //   this.props.navigation.navigate('ProductUpload', {
-  //     companyName: company_name,
-  //     productCategory: product_Category,
-  //     location: location_value,
-  //     BarCodeData: data
-  //   })
-  // }
 
   skipScan = () => {
     const { company_name, product_Category, location_value } = this.state
@@ -209,7 +214,7 @@ export default class BarCodeScan extends React.Component {
 
 
   recyclingProductAdd = async () => {
-    const {barCodeDetails} = this.state
+    const { barCodeDetails } = this.state
     let formData = new FormData();
     formData.append('productImage', null);
     formData.append('barCodeImage', null);
@@ -238,7 +243,7 @@ export default class BarCodeScan extends React.Component {
           this.sendPushFromLocal(push)
           await AsyncStorage.setItem('remainReward', JSON.stringify(response.response_data.remainReward));
 
-          this.setState({ remainReward: this.state.remainReward }, () => {
+          this.setState({ remainReward: this.state.remainReward }, async () => {
             (Platform.OS === 'android' ? Alert : AlertIOS).alert(
               'Success', 'Congratulations you have earned 5 points',
               [
@@ -247,11 +252,9 @@ export default class BarCodeScan extends React.Component {
                 }
               ]
             );
-            console.log('resycling add data:', response.response_data)
-            this.props.navigation.navigate('Home')
-            // this.setState({ loading: false, isMounted: true }, () => {
-            //   this.props.navigation.navigate('Home')
-            // })
+            this.setState({ scanned: false, data: '', company_name: '' })
+            this.props.navigation.navigate('Home');
+
           })
 
         } else {
@@ -290,115 +293,127 @@ export default class BarCodeScan extends React.Component {
   };
 
   render() {
-    const { data, barCodeDetails,scanned } = this.state;
-    return (
-      <View style={{ flex: 1, backgroundColor: '#334259' }}>
-        <ScrollView
-          alwaysBounceVertical={true}
-          keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingVertical: 10 }}
-        >
-          <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 40, marginBottom: 40 }}>
-            <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 20 }}>Start Scanning Bar Code</Text>
-          </View>
-
-        {!barCodeDetails.image && 
-          <TouchableOpacity
-            style={{ alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: '#fff', backgroundColor: '#1e2c46', marginHorizontal: '20%', paddingVertical: 25, marginBottom: 30, }}
-            onPress={() => { this.setModalVisible(!this.state.modalVisible); }}
+    const { data, barCodeDetails, scanned } = this.state;
+    if (this.state.isMounted === false) {
+      return (
+        <View style={{ flex: 1, backgroundColor: '#334058' }}>
+          <Loader loading={this.state.loading} navigation={this.props.navigation} />
+        </View>
+      )
+    } else {
+      return (
+        <View style={{ flex: 1, backgroundColor: '#334259' }}>
+          <ScrollView
+            alwaysBounceVertical={true}
+            keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingVertical: 10 }}
           >
-            <Image
-              style={{ width: 180, height: 120 }}
-              source={require('../../../assets/img/barcode_Scanner/bar_code.png')}
-            />
-          </TouchableOpacity>
-        }
+            <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 40, marginBottom: 40 }}>
+              <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 20 }}>Start Scanning Bar Code</Text>
+            </View>
 
-
-          <Modal
-            animationType='fade'
-            transparent={true}
-            visible={this.state.modalVisible}
-            onRequestClose={() => {
-              Alert.alert('Modal has been closed.');
-            }}
-          > 
-            <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.6)' }} >
-              <BarCodeScanner
-                onBarCodeScanned={this.handleBarCodeScanned}
-                style={[StyleSheet.absoluteFill, styles.container]}>
-                <Text style={styles.description}>Scan your Bar code</Text>
+            {!barCodeDetails.image &&
+              <TouchableOpacity
+                style={{ alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: '#fff', backgroundColor: '#1e2c46', marginHorizontal: '20%', paddingVertical: 25, marginBottom: 30, }}
+                onPress={() => { this.setModalVisible(!this.state.modalVisible); }}
+              >
                 <Image
-                  style={styles.qr}
+                  style={{ width: 180, height: 120 }}
                   source={require('../../../assets/img/barcode_Scanner/bar_code.png')}
                 />
-                <Text
-                  onPress={() => { this.setModalVisible(!this.state.modalVisible); }}
-                  style={styles.cancel}>
-                  Cancel
-               </Text>
-              </BarCodeScanner>
-            </View>
-          </Modal>
+              </TouchableOpacity>
+            }
 
-          {barCodeDetails.barcode ? 
-           <View style={{ marginBottom: 40, alignItems: 'center' }} >
-            <View style={{ borderWidth: 2, borderColor: '#3e9126', borderRadius: 10,marginHorizontal:20 }}>
-              <Image
-                source={{ uri:barCodeDetails.image }}
-                resizeMode="cover"
-                style={{ width:215, height:150, alignSelf: 'center', borderRadius: 10 }}
+
+            <Modal
+              animationType='fade'
+              transparent={true}
+              visible={this.state.modalVisible}
+              onRequestClose={() => {
+                Alert.alert('Modal has been closed.');
+              }}
+            >
+              <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.6)' }} >
+                <BarCodeScanner
+                  onBarCodeScanned={this.handleBarCodeScanned}
+                  style={[StyleSheet.absoluteFill, styles.container]}>
+                  <Text style={styles.description}>Scan your Bar code</Text>
+                  <Image
+                    style={styles.qr}
+                    source={require('../../../assets/img/barcode_Scanner/bar_code.png')}
+                  />
+                  <Text
+                    onPress={() => { this.setModalVisible(!this.state.modalVisible); }}
+                    style={styles.cancel}>
+                    Cancel
+               </Text>
+                </BarCodeScanner>
+              </View>
+            </Modal>
+
+            {barCodeDetails.barcode ?
+              <View style={{ marginBottom: 40, alignItems: 'center' }} >
+                {this.state.loading && <Loader show={this.state.loading} navigation={this.props.navigation} />}
+                <View style={{ borderWidth: 2, borderColor: '#3e9126', borderRadius: 10, marginHorizontal: 20 }}>
+                  <SmoothImage
+                   source={{ uri: barCodeDetails.image }}
+                   resizeMode="cover"
+                   style={{ width: 215, height: 150, alignSelf: 'center', borderRadius: 10 }}
+                   loaderColor="#488f01"
+                   loaderBackgroundStyle={{ backgroundColor: '#000' }}
+                  />
+                </View>
+                <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 14, marginTop: 13, marginBottom: 5 }}>{`Recycle BAR Code: ${barCodeDetails.barcode}`} </Text>
+                <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 14, marginBottom: 5 }}>{`Product Name : ${barCodeDetails.name}`} </Text>
+                <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 14, }}>{`product Type: ${barCodeDetails.RecyclingProductType}`} </Text>
+              </View> :
+              <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Regular', fontSize: 16, marginBottom: 15, marginTop: -10 }}>Tap above to scan Bar code</Text>
+            }
+            <View>
+
+            </View>
+            {
+              barCodeDetails.image ?
+                <View style={{ marginHorizontal: 30, marginHorizontal: '20%', marginBottom: 15 }}>
+                  <CustomButton
+                    // disabled={this.state.data ? false : true}
+                    text="Re-Scan"
+                    onClick={() => this.setState({ barCodeDetails: '' })}
+                  />
+                </View>
+
+                :
+                <>
+                  <View style={{ alignItems: 'center', marginBottom: 15, marginHorizontal: 22 }}>
+                    <Text style={{ textAlign: 'center', color: '#fffeff', fontFamily: 'WS-Regular' }}>If item does not have bar code click SKIP to upload image</Text>
+                  </View>
+
+                  <View style={{ marginHorizontal: 30, marginHorizontal: '20%', marginBottom: 15 }}>
+                    <CustomButton
+                      // disabled={this.state.data ? false : true}
+                      text="SKIP"
+                      onClick={this.skipScan}
+                    />
+                  </View>
+                </>
+            }
+
+            <View style={{ marginHorizontal: 30 }}>
+              <CustomButton
+                disabled={this.state.barCodeDetails ? false : true}
+                text="Submit"
+                onClick={this.recyclingProductAdd}
               />
             </View>
-            <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 14,marginTop:13,marginBottom:5 }}>{`Recycle BAR Code: ${barCodeDetails.barcode}`} </Text>
-            <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 14,marginBottom:5 }}>{`Product Name : ${barCodeDetails.name}`} </Text>
-            <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 14, }}>{`product Type: ${barCodeDetails.RecyclingProductType}`} </Text>
-          </View> :
-            <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Regular', fontSize: 16, marginBottom: 15, marginTop: -10 }}>Tap above to scan Bar code</Text>
-          }
-          <View>
-            
-          </View>
-         {
-           barCodeDetails.image ?
-           <View style={{ marginHorizontal: 30, marginHorizontal: '20%', marginBottom: 15 }}>
-           <CustomButton
-             // disabled={this.state.data ? false : true}
-             text="Re-Scan"
-             onClick={() => this.setState({barCodeDetails: ''})}
-           />
-         </View>
 
-         :
-        <>
-       <View style={{ alignItems: 'center', marginBottom: 15, marginHorizontal: 22 }}>
-         <Text style={{ textAlign: 'center', color: '#fffeff', fontFamily: 'WS-Regular' }}>If item does not have bar code click SKIP to upload image</Text>
-       </View>
-
-       <View style={{ marginHorizontal: 30, marginHorizontal: '20%', marginBottom: 15 }}>
-         <CustomButton
-           // disabled={this.state.data ? false : true}
-           text="SKIP"
-           onClick={this.skipScan}
-         />
-       </View>
-       </>
-         }
-
-          <View style={{ marginHorizontal: 30 }}>
-            <CustomButton
-              disabled={this.state.barCodeDetails ? false : true}
-              text="Submit"
-              onClick={this.recyclingProductAdd}
-            />
-          </View>
-
-        </ScrollView>
-      </View >
-    );
+          </ScrollView>
+        </View >
+      );
+    }
   }
 }
+
 
 const styles = StyleSheet.create({
   container: {

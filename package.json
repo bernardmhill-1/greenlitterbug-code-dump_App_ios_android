@@ -36,7 +36,8 @@
     "react-native-picker-select": "^6.3.2",
     "react-native-snap-carousel": "^3.8.0",
     "react-native-web": "^0.11.4",
-    "react-navigation": "^3.11.0"
+    "react-navigation": "^3.11.0",
+    "smoothimage": "^1.0.3"
   },
   "devDependencies": {
     "babel-preset-expo": "^6.0.0",
