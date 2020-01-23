@@ -102,14 +102,14 @@ export default class BarCodeScan extends React.Component {
   }
 
   listner = () => {
-    this.props.navigation.addListener('didFocus',
-      (payload) => {
-        const { company_name } = this.state
-        if (company_name == "") {
-          this.props.navigation.navigate('Scan')
-        }
+   this.props.navigation.addListener('didFocus',
+    (payload) => {
+      const {company_name} = this.state
+      if(company_name == "") {
+        this.props.navigation.navigate('Scan')
       }
-    );
+    }
+  );
   }
 
   getPermissionAsync = async () => {
@@ -254,7 +254,7 @@ export default class BarCodeScan extends React.Component {
             );
             this.setState({ scanned: false, data: '', company_name: '' })
             this.props.navigation.navigate('Home');
-
+           
           })
 
         } else {
@@ -309,11 +309,13 @@ export default class BarCodeScan extends React.Component {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ paddingVertical: 10 }}
           >
+            {!barCodeDetails.image &&
+             <>
             <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 40, marginBottom: 40 }}>
-              <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 20 }}>Start Scanning Bar Code</Text>
+              <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 20 }}>Scan Product Bar Code Label</Text>
             </View>
 
-            {!barCodeDetails.image &&
+            
               <TouchableOpacity
                 style={{ alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: '#fff', backgroundColor: '#1e2c46', marginHorizontal: '20%', paddingVertical: 25, marginBottom: 30, }}
                 onPress={() => { this.setModalVisible(!this.state.modalVisible); }}
@@ -323,6 +325,7 @@ export default class BarCodeScan extends React.Component {
                   source={require('../../../assets/img/barcode_Scanner/bar_code.png')}
                 />
               </TouchableOpacity>
+              </>
             }
 
 
@@ -353,16 +356,16 @@ export default class BarCodeScan extends React.Component {
             </Modal>
 
             {barCodeDetails.barcode ?
-              <View style={{ marginBottom: 40, alignItems: 'center' }} >
-                {this.state.loading && <Loader show={this.state.loading} navigation={this.props.navigation} />}
+              <View style={{ marginBottom: 40,marginTop:40, alignItems: 'center' }} >
+                 {this.state.loading && <Loader show={this.state.loading} navigation={this.props.navigation} />}
                 <View style={{ borderWidth: 2, borderColor: '#3e9126', borderRadius: 10, marginHorizontal: 20 }}>
-                  <SmoothImage
+                <SmoothImage
                    source={{ uri: barCodeDetails.image }}
                    resizeMode="cover"
                    style={{ width: 215, height: 150, alignSelf: 'center', borderRadius: 10 }}
                    loaderColor="#488f01"
                    loaderBackgroundStyle={{ backgroundColor: '#000' }}
-                  />
+                   />
                 </View>
                 <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 14, marginTop: 13, marginBottom: 5 }}>{`Recycle BAR Code: ${barCodeDetails.barcode}`} </Text>
                 <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 14, marginBottom: 5 }}>{`Product Name : ${barCodeDetails.name}`} </Text>

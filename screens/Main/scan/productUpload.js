@@ -160,7 +160,7 @@ export default class ProductUpload extends React.Component {
           if (r.response_code == 2000) {
             this.setState({ productTypeList: r.response_data, loading: false, isMounted: true }, () => {
               r.response_data.map(cat => {
-                categoryMod.push({ label: cat.productTypeName, value: cat._id })
+                categoryMod.push({ label: cat.productTypeName, value: cat._id})
               })
             })
             this.setState({ categoryList: categoryMod })
@@ -337,15 +337,12 @@ export default class ProductUpload extends React.Component {
       })
   };
 
-
-
-
-  render() {
+render() {
     const placeholder = {
-      label: 'Choose Product Type',
+      label: 'Select Product Type',
       value: null,
       color: '#9EA0A4',
-      fontSize:10
+      fontSize:8
     };
     const { categoryList,image1,productType } = this.state;
     if (this.state.isMounted === false) {
@@ -370,7 +367,7 @@ export default class ProductUpload extends React.Component {
             </View>
 
             <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 15, justifyContent: 'center' }}>
-              <View style={{ flex: 0.1, alignItems: 'center' }}>
+              <View style={{ flex: 0.2, alignItems: 'center' }}>
                 <AntDesign
                   name="select1"
                   size={20}
@@ -378,7 +375,7 @@ export default class ProductUpload extends React.Component {
                 />
               </View>
 
-              <View style={{ flex: 0.9, alignItems: 'flex-start' }}>
+              <View style={{ flex: 0.8, alignItems: 'flex-start' }}>
                 {/* <Picker
                   style={{ width: '93%', color: '#ffffff' }}
                   selectedValue={this.state.productType}
@@ -540,7 +537,7 @@ const pickerSelectStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'transparent',
     borderRadius: 4,
-    color: 'black',
+    color: 'white',
     paddingRight: '30%', // to ensure the text is never behind the icon
   },
   inputAndroid: {
@@ -550,11 +547,11 @@ const pickerSelectStyles = StyleSheet.create({
     alignItems: 'flex-start',
     fontSize: 15,
     paddingLeft: 10,
+    color: 'white',
     paddingVertical: 5,
     borderWidth: 0.5,
     borderColor: 'transparent',
     borderRadius: 8,
-    color: '#000',
     // paddingRight: '50%',
     // to ensure the text is never behind the icon
 

@@ -17,7 +17,7 @@ import {
 } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import * as Permissions from 'expo-permissions'
-import { MaterialIcons,} from '@expo/vector-icons';
+import { MaterialIcons, } from '@expo/vector-icons';
 import { CustomButton } from '../../../components/Button'
 import { CartCount } from '../../../components/cartCounter'
 
@@ -86,7 +86,7 @@ export default class Scan extends React.Component {
             userToken: JSON.parse(res[0][1]),
             userId: JSON.parse(res[1][1]),
             cartCount: JSON.parse(res[2][1]),
-            data :'',
+            data: '',
           }, () => {
             this.props.navigation.setParams({
               cartCount: this.state.cartCount,
@@ -136,7 +136,7 @@ export default class Scan extends React.Component {
 
   render() {
     const { data } = this.state;
-    console.log('data:',data)
+    console.log('data:', data)
     return (
       <View style={{ flex: 1, backgroundColor: '#334259' }}>
         <ScrollView
@@ -146,66 +146,69 @@ export default class Scan extends React.Component {
           contentContainerStyle={{ paddingVertical: 10 }}
         >
 
-            <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 60, marginBottom: 40 }}>
-              <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 20 }}>Start Scanning QR Code</Text>
-            </View>
-
-            <TouchableOpacity
-              style={{ alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: '#fff', backgroundColor: '#1e2c46', marginHorizontal: '30%', paddingVertical: 20, marginBottom: 30, }}
-              onPress={() => { this.setModalVisible(!this.state.modalVisible); }}
-            >
-              <Image
-                style={{ width: 80, height: 80 }}
-                source={require('../../../assets/img/barcode_Scanner/scanning.png')}
-              />
-            </TouchableOpacity>
-
-
-            <Modal
-              animationType='fade'
-              transparent={true}
-              visible={this.state.modalVisible}
-              onRequestClose={() => {
-                Alert.alert('Modal has been closed.');
-              }}
-            >
-              <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.6)' }} >
-                <BarCodeScanner
-                  onBarCodeScanned={this.handleBarCodeScanned}
-                  style={[StyleSheet.absoluteFill, styles.container]}>
-                  <Text style={styles.description}>Scan your QR code</Text>
-                  <Image
-                    style={styles.qr}
-                    source={require('../../../assets/img/barcode_Scanner/scanning.png')}
-                  />
-                  <Text
-                    onPress={() => { this.setModalVisible(!this.state.modalVisible); }}
-                    style={styles.cancel}>
-                    Cancel
-               </Text>
-                </BarCodeScanner>
+          {!data.companyname &&
+            <>
+              <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 60, marginBottom: 40 }}>
+                <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 20 }}>Scan Recycling Bin QR Code</Text>
               </View>
-            </Modal>
 
-            {data.productcategory ? <View style={{ marginBottom: 40, alignItems: 'center' }} >
-              <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Regular', fontSize: 14, marginBottom: 5 }} >{`Company Name: ${data.companyname}`}</Text>
-              <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 18 }}>{`Bin Category: ${data.productcategory}`} </Text>
-              <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 18 }}>{`Location: ${data.location}`} </Text>
-            </View> :
-              <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Regular', fontSize: 16, marginBottom: 15, marginTop: -10 }}>Tap above to scan QR code</Text>
-            }
-            {/* 
+              <TouchableOpacity
+                style={{ alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: '#fff', backgroundColor: '#1e2c46', marginHorizontal: '30%', paddingVertical: 20, marginBottom: 30, }}
+                onPress={() => { this.setModalVisible(!this.state.modalVisible); }}
+              >
+                <Image
+                  style={{ width: 80, height: 80 }}
+                  source={require('../../../assets/img/barcode_Scanner/scanning.png')}
+                />
+              </TouchableOpacity>
+            </>
+          }
+
+          <Modal
+            animationType='fade'
+            transparent={true}
+            visible={this.state.modalVisible}
+            onRequestClose={() => {
+              Alert.alert('Modal has been closed.');
+            }}
+          >
+            <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.6)' }} >
+              <BarCodeScanner
+                onBarCodeScanned={this.handleBarCodeScanned}
+                style={[StyleSheet.absoluteFill, styles.container]}>
+                <Text style={styles.description}>Scan your QR code</Text>
+                <Image
+                  style={styles.qr}
+                  source={require('../../../assets/img/barcode_Scanner/scanning.png')}
+                />
+                <Text
+                  onPress={() => { this.setModalVisible(!this.state.modalVisible); }}
+                  style={styles.cancel}>
+                  Cancel
+               </Text>
+              </BarCodeScanner>
+            </View>
+          </Modal>
+
+          {data.productcategory ? <View style={{ marginBottom: 40,marginTop:90, alignItems: 'center' }} >
+            <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 16, marginBottom: 5 }} >{`Company Name: ${data.companyname}`}</Text>
+            <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 16 }}>{`Product Category: ${data.productcategory}`} </Text>
+            <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 16}}>{`Location: ${data.location}`} </Text>
+          </View> :
+            <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Regular', fontSize: 16, marginBottom: 15, marginTop: -10 }}>Tap above to scan QR code</Text>
+          }
+          {/* 
           <View style={{ borderRadius: 30, borderWidth: 1, borderColor: '#fff', marginHorizontal: '25%', paddingVertical: 15, backgroundColor: '#1d283a', marginBottom: 40, alignItems: 'center' }}>
             <Text style={{ textAlign: 'center', color: '#fffeff', fontFamily: 'WS-Regular' }}>Point Achieve: 5</Text>
           </View> */}
 
-            <View style={{ marginHorizontal: 30 }}>
-              <CustomButton
-                disabled={this.state.data.productcategory ? false : true}
-                text="NEXT"
-                onClick={this.scanComplete}
-              />
-            </View>
+          <View style={{ marginHorizontal: 30 }}>
+            <CustomButton
+              disabled={this.state.data.productcategory ? false : true}
+              text="NEXT"
+              onClick={this.scanComplete}
+            />
+          </View>
 
         </ScrollView>
       </View >
