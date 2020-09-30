@@ -434,7 +434,7 @@ render() {
 
 
             <View style={{ alignItems: 'center', justifyContent: 'center', marginBottom: 30 }}>
-              <Text style={{ textAlign: 'center', color: '#fff', fontFamily: 'WS-Medium', fontSize: 14, marginBottom: 20 }}>Upload Images of the Product</Text>
+              <Text style={{ textAlign: 'center', color: '#fff', fontFamily: 'WS-Medium', fontSize: 14, marginBottom: 20 }}>Upload image of the product</Text>
 
               {
                 this.state.image1 !== null ?
