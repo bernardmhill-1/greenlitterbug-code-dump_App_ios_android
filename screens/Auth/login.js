@@ -14,7 +14,7 @@ import {
 } from "react-native"
 import CustomButton from '../../components/Button'
 import { MaterialCommunityIcons, EvilIcons } from '@expo/vector-icons';
-import { Notifications } from 'expo';
+import * as Notifications from 'expo-notifications'
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
 import { CheckBox } from 'react-native-elements'
@@ -40,7 +40,6 @@ export default class Login extends React.Component {
     bothError: '',
     isDirty: false,
     loading: false,
-
 
   };
 
@@ -112,31 +111,22 @@ export default class Login extends React.Component {
       email: this.state.email,
       password: this.state.password,
       devicetoken: this.state.token,
-      pushtoken: this.state.pushtoken,
+      pushtoken: this.state.pushtoken.data,
       apptype: Platform.OS === 'android' ? 'ANDROID' : 'IOS'
     },
       (e, r) => {
         if (e) {
           this.setState({ loading: false });
-          // alert('Error: ' + e);
+          console.log("LOGIN", e);
         } else {
           console.log("LOGIN", r);
           if (r.response_code == 2000) {
-       
+           
             this.setData(r);
             this.props.navigation.navigate('Home');
             this.setState({ loading: false })
-            // Alert.alert('Success', r.response_message);
           } else {
             this.setState({ loading: false, passError: 'Wrong credentials please try again !' })
-            // (Platform.OS === 'android' ? Alert : AlertIOS).alert(
-            //   'Failed', r.response_message,
-            //   [
-            //     {
-            //       text: 'OK', onPress: () => this.setState({ loading: false })
-            //     }
-            //   ]
-            // );
           }
         }
       })
@@ -161,7 +151,7 @@ export default class Login extends React.Component {
         }
       })
     } catch (e) {
-      (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+      Alert.alert(
         'Error', e,
         [
           {
@@ -257,7 +247,7 @@ export default class Login extends React.Component {
 
           <View style={{ marginHorizontal: 25, marginBottom: 60 }}>
             <CustomButton
-              disabled={emailError || passError || bothError || !isDirty ? true : false}
+             disabled={emailError || passError || bothError || !isDirty ? true : false}
               text="LOGIN"
               onClick={this.fetchAPI}
             />

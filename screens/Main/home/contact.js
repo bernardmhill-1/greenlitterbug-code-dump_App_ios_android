@@ -101,7 +101,7 @@ export default class Contact extends React.Component {
           //CATCH THE ERROR IN DEVELOPMENT
         } else {
           if (r.response_code === 2000) {
-            (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+          	Alert.alert(
               'Success', JSON.stringify(r.response_message),
               [
                 {

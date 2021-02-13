@@ -1,4 +1,4 @@
-import { NetInfo } from 'react-native';
+import NetInfo from '@react-native-community/netinfo';
 import AppConfig from '../config';
 import qs from 'qs'
 const url = AppConfig.apiLoc;
@@ -6,8 +6,10 @@ var apiCalls = {};
 // let error = 'Uh oh, something has gone wrong. Please tweet us @randomapi about the issue. Thank you.'
 
 apiCalls.login = (data, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  console.log('Apidata',data)
+  NetInfo.fetch().then(state => {
+    console.log("i am doctor",state.isConnected)
+    if (state.isConnected) {
       fetch(url + '/login', {
         method: 'POST',
         headers: {
@@ -30,7 +32,7 @@ apiCalls.login = (data, cb) => {
         .catch((error) => {
           cb(error);
         });
-    }
+     }
     else {
       Alert.alert('No Internet', 'You are Offline. Please check your connection.')
     }
@@ -38,8 +40,8 @@ apiCalls.login = (data, cb) => {
 }
 
 apiCalls.forgotPassword = (email, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/forgotPassword', {
         method: 'POST',
         headers: {
@@ -68,8 +70,8 @@ apiCalls.forgotPassword = (email, cb) => {
 apiCalls.verifyOTP = (data, cb) => {
   console.log('varify-data', data);
 
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/verifyOtp', {
         method: 'POST',
         headers: {
@@ -97,8 +99,8 @@ apiCalls.verifyOTP = (data, cb) => {
 }
 
 apiCalls.resetPassword = (data, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/resetPassword', {
         method: 'POST',
         headers: {
@@ -127,8 +129,8 @@ apiCalls.resetPassword = (data, cb) => {
 
 apiCalls.emailVerification = (data, cb) => {
   console.log(data);
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/emailVerification', {
         method: 'POST',
         headers: {
@@ -156,8 +158,8 @@ apiCalls.emailVerification = (data, cb) => {
 }
 
 apiCalls.editProfile = (data, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/editProfile', {
         method: 'POST',
         headers: {
@@ -188,8 +190,8 @@ apiCalls.editProfile = (data, cb) => {
 }
 
 apiCalls.register = (data, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/register', {
         method: 'POST',
         headers: {
@@ -222,8 +224,8 @@ apiCalls.register = (data, cb) => {
 }
 
 apiCalls.Privacy = (data, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/cms?content_type=privacy_policy', {
         method: 'GET',
         headers: {
@@ -247,8 +249,8 @@ apiCalls.Privacy = (data, cb) => {
 }
 
 apiCalls.termsCondition = (data, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/cms?content_type=terms_condition', {
         method: 'GET',
         headers: {
@@ -272,8 +274,8 @@ apiCalls.termsCondition = (data, cb) => {
 }
 
 apiCalls.scanProducts = (data, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/recyclingProductAdd', {
         method: 'POST',
         headers: {
@@ -308,8 +310,8 @@ apiCalls.scanProducts = (data, cb) => {
 }
 
 apiCalls.ProductListByUser = (data, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/recyclingProductListByUser', {
         method: 'POST',
         headers: {
@@ -337,8 +339,8 @@ apiCalls.ProductListByUser = (data, cb) => {
 }
 
 apiCalls.recyclingProductTypeList = (data, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/recyclingProductTypeList', {
         method: 'POST',
         headers: {
@@ -363,8 +365,8 @@ apiCalls.recyclingProductTypeList = (data, cb) => {
 }
 
 apiCalls.ProgramDetails = (data, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/getPrograme', {
         method: 'POST',
         headers: {
@@ -393,8 +395,8 @@ apiCalls.ProgramDetails = (data, cb) => {
 }
 
 apiCalls.editProfileImage = (data, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/editProfileImage', {
         method: 'POST',
         headers: {
@@ -421,8 +423,8 @@ apiCalls.editProfileImage = (data, cb) => {
 }
 
 apiCalls.viewProfile = (data, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/viewProfile', {
         method: 'POST',
         headers: {
@@ -451,8 +453,8 @@ apiCalls.viewProfile = (data, cb) => {
 
 apiCalls.changePassword = (data, cb) => {
   console.log('data', data)
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/changePassword', {
         method: 'POST',
         headers: {
@@ -483,8 +485,8 @@ apiCalls.changePassword = (data, cb) => {
 }
 
 apiCalls.causeList = (data, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/causeList', {
         method: 'POST',
         headers: {
@@ -513,8 +515,8 @@ apiCalls.causeList = (data, cb) => {
 }
 
 apiCalls.causeDetail = (data, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/causeDetail', {
         method: 'POST',
         headers: {
@@ -543,8 +545,8 @@ apiCalls.causeDetail = (data, cb) => {
 }
 
 apiCalls.vendorListing = (data, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/vendorList', {
         method: 'POST',
         headers: {
@@ -573,8 +575,8 @@ apiCalls.vendorListing = (data, cb) => {
 }
 
 apiCalls.vendorDetail = (data, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/vendorDetail', {
         method: 'POST',
         headers: {
@@ -603,8 +605,9 @@ apiCalls.vendorDetail = (data, cb) => {
 }
 
 apiCalls.home = (data, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  console.log("home data ----",data)
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/home', {
         method: 'POST',
         headers: {
@@ -630,8 +633,8 @@ apiCalls.home = (data, cb) => {
 }
 
 apiCalls.featuredAdsList = (data, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/featuredAdsList', {
         method: 'POST',
         headers: {
@@ -657,8 +660,8 @@ apiCalls.featuredAdsList = (data, cb) => {
 }
 
 apiCalls.productList = (data, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/productList', {
         method: 'POST',
         headers: {
@@ -689,8 +692,8 @@ apiCalls.productList = (data, cb) => {
 }
 
 apiCalls.productCategoryList = (data, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/productCategoryList', {
         method: 'POST',
         headers: {
@@ -716,8 +719,8 @@ apiCalls.productCategoryList = (data, cb) => {
 }
 
 apiCalls.productDetail = (data, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/productDetail', {
         method: 'POST',
         headers: {
@@ -746,8 +749,8 @@ apiCalls.productDetail = (data, cb) => {
 }
 
 apiCalls.addTocart = (data, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/addTocart', {
         method: 'POST',
         headers: {
@@ -778,8 +781,8 @@ apiCalls.addTocart = (data, cb) => {
 }
 
 apiCalls.cartList = (data, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/cartList', {
         method: 'POST',
         headers: {
@@ -809,8 +812,8 @@ apiCalls.cartList = (data, cb) => {
 
 
 apiCalls.cartProductDelete = (data, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/cartProductDelete', {
         method: 'POST',
         headers: {
@@ -840,8 +843,8 @@ apiCalls.cartProductDelete = (data, cb) => {
 }
 
 apiCalls.cartQuatityUpdate = (data, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/cartQuatityUpdate', {
         method: 'POST',
         headers: {
@@ -872,8 +875,8 @@ apiCalls.cartQuatityUpdate = (data, cb) => {
 }
 
 apiCalls.addShippingAddress = (data, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/addShippingAddress', {
         method: 'POST',
         headers: {
@@ -908,8 +911,8 @@ apiCalls.addShippingAddress = (data, cb) => {
 }
 
 apiCalls.viewShippingAddress = (data, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/viewShippingAddress', {
         method: 'POST',
         headers: {
@@ -939,8 +942,8 @@ apiCalls.viewShippingAddress = (data, cb) => {
 }
 
 apiCalls.checkOut = (data, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/checkOut', {
         method: 'POST',
         headers: {
@@ -970,8 +973,8 @@ apiCalls.checkOut = (data, cb) => {
 }
 
 apiCalls.orderList = (data, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/orderList', {
         method: 'POST',
         headers: {
@@ -1001,8 +1004,8 @@ apiCalls.orderList = (data, cb) => {
 }
 
 apiCalls.contactUs = (data, cb) => {
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/contactUs', {
         method: 'POST',
         headers: {
@@ -1034,8 +1037,8 @@ apiCalls.contactUs = (data, cb) => {
 
 apiCalls.searchRecyclingProduct = (data, cb) => {
   console.log('Apidata',data)
-  NetInfo.isConnected.fetch().then(isConnected => {
-    if (isConnected) {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
       fetch(url + '/searchRecyclingProduct', {
         method: 'POST',
         headers: {

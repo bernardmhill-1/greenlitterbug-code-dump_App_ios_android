@@ -125,6 +125,7 @@ export default class Home extends React.Component {
   }
 
   componentDidMount = async () => {
+    console.log("hello i am inter in commponent did mount----")
     this.willFocusListener = await this.props.navigation.addListener('willFocus', async () => {
       await AsyncStorage.multiGet(['userToken', 'userId', 'userCartCount'], (err, res) => {
         if (err) {
@@ -144,14 +145,17 @@ export default class Home extends React.Component {
         }
       })
     })
-    // this.willFocusListener = this.props.navigation.addListener(
-    //   'willFocus',
-    //    () => {
-    //     this.props.navigation.setParams({
-    //       cartCount: this.state.cartCount,
-    //     });
-    //   }
-    // )
+    this.listner()
+  }
+
+  listner = () => {
+    this.willFocusListener = this.props.navigation.addListener(
+      'willFocus',
+      () => {
+        this.featuredVendor();
+        this.featuredAdsList();
+      }
+    )
   }
 
   componentWillUnmount = () => {
@@ -216,6 +220,7 @@ export default class Home extends React.Component {
           //CATCH THE ERROR IN DEVELOPMENT 
         } else {
           if (r.response_code === 2000) {
+            console.log("home data ----",r)
             this.setState({ VendresList: r.response_data.featuredVendor, productList: r.response_data.popularProduct, loading: false, isMounted: true }, () => {
               this.state.VendresList.push({ text: 'View More' })
               this.state.productList.push({ text: 'View More' })

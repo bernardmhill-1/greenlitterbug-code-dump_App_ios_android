@@ -64,7 +64,7 @@ export default class ChangePassword extends Component {
   componentDidMount = async () => {
     await AsyncStorage.multiGet(['userToken', 'userId'], (err, res) => {
       if (err) {
-        (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+      	Alert.alert(
           'Error', err,
           [
             {
@@ -93,7 +93,7 @@ export default class ChangePassword extends Component {
     },
       (e, r) => {
         if(e) {
-          (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+          Alert.alert(
             'Error', e,
             [
               {
@@ -107,7 +107,7 @@ export default class ChangePassword extends Component {
             // Alert.alert('Success', r.response_message);
             this.props.navigation.navigate('Login');
           } else {
-            (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+            Alert.alert(
               'Something went wrong ', JSON.stringify(r.response_message),
               [
                 {

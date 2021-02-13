@@ -74,7 +74,7 @@ export default class CheckOutStep1 extends React.Component {
     this.willFocusListener = await this.props.navigation.addListener('willFocus', async () => {
       await AsyncStorage.multiGet(['userToken', 'userId', 'userCartCount'], (err, res) => {
         if (err) {
-          (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+          Alert.alert(
             'Error', err,
             [
               {

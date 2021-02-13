@@ -8,8 +8,8 @@ import AuthLoadingScreen from "./AuthLoadingScreen";
 
 export default createAppContainer(createSwitchNavigator({
   AuthLoading: AuthLoadingScreen,
-  Main: MainTabNavigator,
   Auth: AuthNavigator,
+  Main: MainTabNavigator,
 },{
   initialRouteName: 'AuthLoading'
 }));

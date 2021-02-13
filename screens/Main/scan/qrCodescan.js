@@ -176,11 +176,22 @@ export default class Scan extends React.Component {
               <BarCodeScanner
                 onBarCodeScanned={this.handleBarCodeScanned}
                 style={[StyleSheet.absoluteFill, styles.container]}>
-                <Text style={styles.description}>Scan your QR code</Text>
+                <View style={{borderWidth:2,borderColor:"#396e16",marginTop: '10%',backgroundColor:"white",width:"75%",padding:18}}>
+                <Text style={{ fontSize: width * 0.04,color:"black",fontWeight:"bold"}}>Earn rewards in 2 small steps!</Text>
+                <Text style={{fontSize: width * 0.05,color:"gray",textAlign:"center"}}>First, scan the QR code a recycling bin near you.</Text>
+                </View>
+                
+                <View style={{position:"absolute",top:60,left:13}}>
                 <Image
-                  style={styles.qr}
-                  source={require('../../../assets/img/barcode_Scanner/scanning.png')}
+                  style={{width:60,height:60}}
+                  source={require('../../../assets/img/barcode_Scanner/cartton.png')}
                 />
+                </View>
+                <Image
+                   style={styles.qr}
+                   source={require('../../../assets/img/barcode_Scanner/scanning.png')}
+                />
+                
                 <Text
                   onPress={() => { this.setModalVisible(!this.state.modalVisible); }}
                   style={styles.cancel}>
@@ -233,6 +244,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     width: '70%',
     color: 'white',
+    
   },
   cancel: {
     fontSize: width * 0.05,

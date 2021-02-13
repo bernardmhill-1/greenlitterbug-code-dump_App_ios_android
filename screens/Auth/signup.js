@@ -163,7 +163,7 @@ export default class Signup extends React.Component {
     },
       (e, r) => {
         if (e) {
-          (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+         Alert.alert(
             'Error', e,
             [
               {
@@ -173,7 +173,7 @@ export default class Signup extends React.Component {
           );
         } else {
           if (r.response_code === 2000) {
-            (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+            Alert.alert(
               'Success', JSON.stringify(r.response_message),
               [
                 {
@@ -182,7 +182,7 @@ export default class Signup extends React.Component {
               ]
             );
           } else {
-            (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+            Alert.alert(
               'Request failed', JSON.stringify(r.response_message),
               [
                 {
@@ -206,7 +206,7 @@ export default class Signup extends React.Component {
     },
       (e, r) => {
         if (e) {
-          (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+          Alert.alert(
             'Error', e,
             [
               {
@@ -221,7 +221,7 @@ export default class Signup extends React.Component {
             this.props.navigation.navigate('Login');
 
           } else {
-            (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+            Alert.alert(
               'Request failed', JSON.stringify(r.response_message),
               [
                 {

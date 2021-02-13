@@ -63,7 +63,7 @@ export default class ForgotPassword extends React.Component {
       this.state.email,
       (e, r) => {
         if (e) {
-          (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+          Alert.alert(
             'Error', e,
             [
               {
@@ -71,9 +71,10 @@ export default class ForgotPassword extends React.Component {
               }
             ]
           );
+          console.log("hello",e)
         } else {
           if (r.response_code == 2000) {
-            (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+            Alert.alert(
               'Success', JSON.stringify(r.response_message),
               [
                 {
@@ -81,8 +82,9 @@ export default class ForgotPassword extends React.Component {
                 }
               ]
             );
+            console.log("hello",r)
           } else {
-            (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+            Alert.alert(
               'Request failed', JSON.stringify(r.response_message),
               [
                 {
@@ -90,6 +92,7 @@ export default class ForgotPassword extends React.Component {
                 }
               ]
             );
+            console.log("hello",e)
           }
         }
       })
@@ -103,7 +106,7 @@ export default class ForgotPassword extends React.Component {
     },
       (e, r) => {
         if (e) {
-          (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+       Alert.alert(
             'Error', e,
             [
               {
@@ -117,7 +120,7 @@ export default class ForgotPassword extends React.Component {
             this.props.navigation.navigate('SetPassword', { userEmail: this.state.email });
             this.setModalVisible(!this.state.modalVisible);
           } else {
-            (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+          Alert.alert(
               'Request failed', JSON.stringify(r.response_message),
               [
                 {

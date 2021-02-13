@@ -148,7 +148,7 @@ export default class ProductUpload extends React.Component {
     },
       (e, r) => {
         if (e) {
-          (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+        	Alert.alert(
             'Error', e,
             [
               {
@@ -165,7 +165,7 @@ export default class ProductUpload extends React.Component {
             })
             this.setState({ categoryList: categoryMod })
           } else {
-            (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+            Alert.alert(
               'Request failed', r.response_message,
               [
                 {
@@ -288,7 +288,7 @@ export default class ProductUpload extends React.Component {
           await AsyncStorage.setItem('remainReward', JSON.stringify(response.response_data.remainReward));
 
           this.setState({ remainReward: this.state.remainReward }, () => {
-            (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+            Alert.alert(
               'Success', 'Congratulations you have earned 5 points',
               [
                 {

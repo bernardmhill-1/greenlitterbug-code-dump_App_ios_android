@@ -163,7 +163,7 @@ export default class BarCodeScan extends React.Component {
       (e, r) => {
         if (e) {
           // this.setState({loading: false, isMounted: true})
-          (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+          Alert.alert(
             'Error', e,
             [
               {
@@ -176,7 +176,7 @@ export default class BarCodeScan extends React.Component {
             this.setState({ barCodeDetails: r.response_data, loading: false, isMounted: true })
           } else {
             // this.setState({loading: false, isMounted: true})
-            (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+            Alert.alert(
               'Info', r.response_message,
               [
                 {
@@ -244,7 +244,7 @@ export default class BarCodeScan extends React.Component {
           await AsyncStorage.setItem('remainReward', JSON.stringify(response.response_data.remainReward));
 
           this.setState({ remainReward: this.state.remainReward }, async () => {
-            (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+            Alert.alert(
               'Success', 'Congratulations you have earned 5 points',
               [
                 {
