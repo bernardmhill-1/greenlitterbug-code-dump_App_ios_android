@@ -3,8 +3,8 @@
   "expoServerPort": 19000,
   "packagerPort": 19000,
   "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
+  "expoServerNgrokUrl": "https://ny-f8r.ritambrata.greenlitterbug-code-dump.exp.direct",
+  "packagerNgrokUrl": "https://packager.ny-f8r.ritambrata.greenlitterbug-code-dump.exp.direct",
+  "ngrokPid": 2053,
   "webpackServerPort": null
 }

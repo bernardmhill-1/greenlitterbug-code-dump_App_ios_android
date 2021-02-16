@@ -10,8 +10,8 @@ import {
   Alert,
   SafeAreaView,
   FlatList,
-  AlertIOS
-
+  AlertIOS,
+  StatusBar
 } from 'react-native';
 import { MaterialIcons, } from '@expo/vector-icons';
 import { RadioButton } from 'react-native-paper';

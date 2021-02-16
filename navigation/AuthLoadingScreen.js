@@ -28,7 +28,7 @@ export default class AuthLoadingScreen extends React.Component {
     if(userToken === null){
       this.props.navigation.navigate('Auth');
     }else{
-      this.props.navigation.replace('Home');
+      this.props.navigation.navigate('Home');
     }
   }
 
