@@ -10,7 +10,8 @@ import {
   AsyncStorage,
   Alert,
   FlatList,
-  AlertIOS
+  AlertIOS,
+  StatusBar
 
 } from 'react-native';
 import { AntDesign, EvilIcons } from '@expo/vector-icons';
@@ -202,6 +203,8 @@ export default class CausesDetails extends React.Component {
     } else {
     return (
       <View style={{ flex: 1 }}>
+        { Platform.OS == "android" &&
+            <StatusBar translucent={true} backgroundColor={'transparent'} />}
         <ScrollView
           alwaysBounceVertical={true}
           keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}

@@ -9,7 +9,8 @@ import {
   KeyboardAvoidingView,
   AsyncStorage,
   Alert,
-  AlertIOS
+  AlertIOS,
+  StatusBar
 
 } from 'react-native';
 import { SimpleLineIcons, MaterialCommunityIcons, } from '@expo/vector-icons';
@@ -172,6 +173,8 @@ export default class Contact extends React.Component {
     } else {
       return (
         <View style={{ flex: 1, marginTop: 10 }}>
+          { Platform.OS == "android" &&
+            <StatusBar translucent={true} backgroundColor={'transparent'} />}
           <ScrollView
             alwaysBounceVertical={true}
             keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}

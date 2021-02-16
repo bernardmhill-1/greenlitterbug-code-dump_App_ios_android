@@ -10,6 +10,7 @@ import {
   AsyncStorage,
   Alert,
   AlertIOS,
+  StatusBar
 } from "react-native";
 
 import { SimpleLineIcons, MaterialIcons } from '@expo/vector-icons';
@@ -288,6 +289,8 @@ export default class EditProfile extends React.Component {
     const { firstError, lastError, phonError, isDirty } = this.state;
     return (
       <View style={{ flex: 1, marginHorizontal: 50 }}>
+        { Platform.OS == "android" &&
+            <StatusBar translucent={true} backgroundColor={'transparent'} />}
         <ScrollView
           alwaysBounceVertical={true}
           keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}

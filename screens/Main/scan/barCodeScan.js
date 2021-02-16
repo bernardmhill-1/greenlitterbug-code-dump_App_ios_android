@@ -13,7 +13,7 @@ import {
   Modal,
   Alert,
   AlertIOS,
-
+  StatusBar
 } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import Constants from 'expo-constants';
@@ -313,6 +313,8 @@ export default class BarCodeScan extends React.Component {
     } else {
       return (
         <View style={{ flex: 1, backgroundColor: '#334259' }}>
+          { Platform.OS == "android" &&
+            <StatusBar translucent={true} backgroundColor={'transparent'} />}
           <ScrollView
             alwaysBounceVertical={true}
             keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}

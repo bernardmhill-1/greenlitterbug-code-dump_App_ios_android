@@ -382,6 +382,8 @@ export default class Home extends React.Component {
     } else {
       return (
         <View style={{ flex: 1, marginTop: 5 }}>
+          { Platform.OS == "android" &&
+            <StatusBar translucent={true} backgroundColor={'transparent'} />}
           <ScrollView
             alwaysBounceVertical={true}
             keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}

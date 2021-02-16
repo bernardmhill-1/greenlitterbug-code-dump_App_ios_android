@@ -9,7 +9,8 @@ import {
   FlatList,
   AsyncStorage,
   Alert,
-  AlertIOS
+  AlertIOS,
+  StatusBar
 
 } from 'react-native';
 import {MaterialIcons } from '@expo/vector-icons';
@@ -162,6 +163,8 @@ export default class VendresListing extends React.Component {
     } else {
     return (
       <View style={{ flex: 1 }}>
+        { Platform.OS == "android" &&
+            <StatusBar translucent={true} backgroundColor={'transparent'} />}
         <ScrollView
           alwaysBounceVertical={true}
           keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}

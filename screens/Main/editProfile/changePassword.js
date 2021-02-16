@@ -7,8 +7,8 @@ import {
   AsyncStorage,
   Alert,
   AlertIOS,
-  Platform
-
+  Platform,
+  StatusBar
 } from 'react-native';
 import { EvilIcons } from "@expo/vector-icons";
 import { CustomButton } from '../../../components/Button'
@@ -125,6 +125,8 @@ export default class ChangePassword extends Component {
     const { currError, newError, cnfError, isDirty } = this.state
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginHorizontal: 50 }}>
+        { Platform.OS == "android" &&
+            <StatusBar translucent={true} backgroundColor={'transparent'} />}
         {this.state.loading && <Loader show={this.state.loading} navigation={this.props.navigation} />}
         <View style={{ alignItems: 'center', marginBottom: 40 }}>
           <Image

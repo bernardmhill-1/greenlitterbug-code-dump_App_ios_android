@@ -11,8 +11,8 @@ import {
   Alert,
   StyleSheet,
   Linking,
-  AlertIOS
-
+  AlertIOS,
+  StatusBar
 } from 'react-native';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { sliderWidth1, sliderItemWidth } from '../../../constants/styles';
@@ -179,6 +179,8 @@ export default class VendorsDetails extends React.Component {
     } else {
     return (
       <View style={{ flex: 1, alignItems: 'center' }}>
+        { Platform.OS == "android" &&
+            <StatusBar translucent={true} backgroundColor={'transparent'} />}
         <ScrollView
           alwaysBounceVertical={true}
           keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}

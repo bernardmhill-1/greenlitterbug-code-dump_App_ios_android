@@ -527,7 +527,7 @@ export default class Signup extends React.Component {
               }}
             >
               <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)' }} >
-                <View style={{ flex: 1, justifyContent: 'center', backgroundColor: '#ffffff', marginTop: DeviceHeight * 0.25, marginBottom: DeviceHeight * 0.25, marginHorizontal: '10%', borderRadius: 5, padding: '3%' }}>
+                <View style={{ height:250, width:"80%", justifyContent: 'center', backgroundColor: '#ffffff', marginTop: DeviceHeight * 0.25, marginBottom: DeviceHeight * 0.25, marginHorizontal: '10%', borderRadius: 5, padding: '3%' }}>
                   <View style={{ alignItems: 'flex-end' }}>
                     <TouchableOpacity
                       onPress={() => { this.setModalVisibleOtp(!this.state.modalVisibleOtp); }}

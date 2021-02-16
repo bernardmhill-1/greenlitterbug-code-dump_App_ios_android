@@ -10,7 +10,7 @@ import {
   AsyncStorage,
   Alert,
   AlertIOS,
-
+  StatusBar
 } from 'react-native';
 import { MaterialIcons, } from '@expo/vector-icons';
 import { RadioButton } from 'react-native-paper';
@@ -163,6 +163,8 @@ export default class Rewards extends React.Component {
     } else {
       return (
         <View style={{ flex: 1, marginTop: 10 }}>
+          { Platform.OS == "android" &&
+            <StatusBar translucent={true} backgroundColor={'transparent'} />}
           <ScrollView
             alwaysBounceVertical={true}
             keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}

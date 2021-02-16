@@ -12,7 +12,8 @@ import {
   Dimensions,
   Modal,
   StyleSheet,
-  AlertIOS
+  AlertIOS,
+  StatusBar
 } from 'react-native';
 import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
@@ -355,6 +356,8 @@ render() {
 
       return (
         <View style={{ flex: 1, backgroundColor: '#334259' }}>
+          { Platform.OS == "android" &&
+            <StatusBar translucent={true} backgroundColor={'transparent'} />}
           {this.state.loading ? <Loader loading={false} navigation={this.props.navigation} /> : <Text></Text>}
           <ScrollView
             alwaysBounceVertical={true}
