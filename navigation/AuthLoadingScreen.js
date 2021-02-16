@@ -16,19 +16,16 @@ export default class AuthLoadingScreen extends React.Component {
     super(props);
     setTimeout(() => SplashScreen.hideAsync(), 1000);
     this.loggedInBefore();
-    console.log("jjiiiiii",props.navigation.navigate)
   
-
   }
 
   loggedInBefore = async () => {
-   
     const userToken = await AsyncStorage.getItem('userToken');
     console.log("userToken",userToken)
     if(userToken === null){
       this.props.navigation.navigate('Auth');
     }else{
-      this.props.navigation.navigate('Home');
+      this.props.navigation.navigate('Main');
     }
   }
 
