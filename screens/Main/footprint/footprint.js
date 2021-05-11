@@ -10,14 +10,37 @@ import {
   AsyncStorage,
   Alert,
   AlertIOS,
+  Dimensions
 
 } from 'react-native';
 import { MaterialIcons, } from '@expo/vector-icons';
 import Loader from '../../../navigation/AuthLoadingScreen'
 import { CartCount } from '../../../components/cartCounter'
-
+import {
+  LineChart,
+  BarChart,
+  PieChart,
+  ProgressChart,
+  ContributionGraph
+} from 'expo-chart-kit'
+import Donut from "../../../components/circle"
 const api = require('../../../api/index');
+
+const screenWidth = Dimensions.get('window').width
+
 var ts = new Date();
+var i = 5;
+
+
+
+const dataPie = [
+  { name: 'Seoul', population: 21500000, color: 'rgba(131, 167, 234, 1)', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+  { name: 'Toronto', population: 2800000, color: '#F00', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+  { name: 'Beijing', population: 527612, color: 'red', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+  { name: 'New York', population: 8538000, color: '#ffffff', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+  { name: 'Moscow', population: 11920000, color: 'rgb(0, 0, 255)', legendFontColor: '#7F7F7F', legendFontSize: 15 }
+]
+
 
 export default class FootPrint extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -68,10 +91,18 @@ export default class FootPrint extends React.Component {
     message: '',
     data: [],
     totalReward: {},
+    remainReward:"",
+    totalWeight:"",
+    barChartData:[],
+    barChartlavel:[],
+    pieChartDataOne:[],
+    pieChartDataTwo:[],
     cartCount: 0,
     loading: true,
     isMounted: false
   }
+
+
 
   componentDidMount = async () => {
     this.willFocusListener = await this.props.navigation.addListener('willFocus', async () => {
@@ -97,6 +128,8 @@ export default class FootPrint extends React.Component {
               })
             });
           this.ProductListByUser();
+          this.ProductBarChart();
+          this.ProductPieChart()
         }
       })
     })
@@ -132,6 +165,7 @@ export default class FootPrint extends React.Component {
               data: r.response_data.list,
               totalReward: r.response_data.totalReward.totalReward,
               remainReward: r.response_data.totalReward.remainReward,
+              totalWeight: r.response_data.totalWeight,
               loading: false,
               isMounted: true
             })
@@ -153,12 +187,98 @@ export default class FootPrint extends React.Component {
   }
 
 
+  ProductBarChart = async () => {
+    this.setState({ loading: true })
+    await api.ProductBarChart({
+      userId: this.state.userId,
+      userToken: this.state.userToken
+    },
+      (e, r) => {
+        if (e) {
+          this.setState({ loading: false, isMounted: true })
+          // (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+          //   'Error', e,
+          //   [
+          //     {
+          //       text: 'OK', onPress: () => this.setState({ loading: false})
+          //     }
+          //   ]
+          // );
+          //CATCH THE ERROR IN DEVELOPMENT 
+        } else {
+          if (r.response_code == 2000) {
+            this.setState({
+              barChartData: r.response_data.datasets[0],
+              barChartlavel: r.response_data.labels,
+              loading: false,
+              isMounted: true
+            })
+          } else {
+            this.setState({ loading: false, isMounted: true });
+            //CATCH THE ERROR IN DEVELOPMENT 
+
+            // (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+            //   'Request failed', r.response_message,
+            //   [
+            //     {
+            //       text: 'OK', onPress: () => this.setState({ loading: false})
+            //     }
+            //   ]
+            // );
+          }
+        }
+      })
+  }
+
+  ProductPieChart = async () => {
+    this.setState({ loading: true })
+    await api.ProductPieChart({
+      userId: this.state.userId,
+      userToken: this.state.userToken
+    },
+      (e, r) => {
+        if (e) {
+          this.setState({ loading: false, isMounted: true })
+          // (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+          //   'Error', e,
+          //   [
+          //     {
+          //       text: 'OK', onPress: () => this.setState({ loading: false})
+          //     }
+          //   ]
+          // );
+          //CATCH THE ERROR IN DEVELOPMENT 
+        } else {
+          if (r.response_code == 2000) {
+            this.setState({
+              pieChartDataOne: r.response_data.graph1,
+              pieChartDataTwo: r.response_data.graph2,
+              loading: false,
+              isMounted: true
+            })
+          } else {
+            this.setState({ loading: false, isMounted: true });
+            //CATCH THE ERROR IN DEVELOPMENT 
+
+            // (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+            //   'Request failed', r.response_message,
+            //   [
+            //     {
+            //       text: 'OK', onPress: () => this.setState({ loading: false})
+            //     }
+            //   ]
+            // );
+          }
+        }
+      })
+  }
+
+  
+
 
 
   render() {
-    const { firstQuery, totalReward, data, remainReward } = this.state;
-    const datalength = data.length;
-    const RedeemedPoint = totalReward - remainReward;
+    const { firstQuery, totalReward, data, remainReward,pieChartDataOne, pieChartDataTwo, barChartData,totalWeight, barChartlavel } = this.state;
     if (this.state.isMounted === false) {
       return (
         <View style={{ flex: 1, backgroundColor: '#334058' }}>
@@ -167,7 +287,7 @@ export default class FootPrint extends React.Component {
       )
     } else {
       return (
-        <View style={{ flex: 1, marginTop: 40 }}>
+        <View style={{ flex: 1,marginTop: 30,backgroundColor:"white"}}>
           <ScrollView
             alwaysBounceVertical={true}
             keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}
@@ -175,108 +295,121 @@ export default class FootPrint extends React.Component {
             contentContainerStyle={{ paddingVertical: 10 }}
           >
 
-            <View
-              style={{ borderBottomWidth: 1, borderBottomColor: '#b7b7b7', marginHorizontal: 25 }}
-            >
-              <View
-                style={{
-                  flexDirection: 'row',
-                  flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  paddingVertical: 10,
+            <View style={{ backgroundColor: "#f1f5ee",flex:1,paddingVertical:10 }}>
+              <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                <Donut percentage={100} color={"#69d14b"} delay={500 + 100 * i} max={totalWeight ? totalWeight :0 } textColor="#ffffff" />
+                <Donut percentage={100} color={"#69d14b"} delay={500 + 100 * i} max={totalReward ?totalReward :0 } textColor="#ffffff" />
+                <Donut percentage={100} color={"#69d14b"} delay={500 + 100 * i} max={remainReward ? remainReward :0} textColor="#ffffff" />
+              </View>
+              <View style={{ flexDirection: "row",justifyContent:"space-between",marginHorizontal:10 }}>
+                <Text style={{ color: "#175323", fontSize: 16, fontWeight: "bold", textAlign: "center" }}>GHG {'\n'} REDUCED</Text>
+                <Text style={{ color: "#175323", fontSize: 16, fontWeight: "bold", textAlign: "center", marginLeft: 10 }}>ITEMS {'\n'} RECYCLED</Text>
+                <Text style={{ color: "#175323", fontSize: 16, fontWeight: "bold", textAlign: "center" }}>POINTS {'\n'}  EARNED</Text>
+              </View>
+            </View>
+
+            <ScrollView style={{ paddingVertical:15 }} horizontal={true}>
+              <LineChart
+                data={{
+                  labels: barChartlavel.length != 0 ? barChartlavel : ["Bottle", "Can", "Candy", "Chips", "Cup", "Other", "Robins"],
+                  datasets: [
+                    {
+                      data: barChartData.length != 0 ? barChartData.data : [0,0,0,0,0,0,0],
+                    }
+                  ],
                 }}
-              >
-                <View style={{ flex: 0.28 }}>
-                  <Text
-                    style={{
-                      color: '#25334a',
-                      fontFamily: 'WS-Medium',
-                      fontSize: 14,
-                      textAlign: 'left',
-                    }}
-                  >
-                    Total Items
-                  </Text>
-                </View>
-                <View style={{ flex: 0.35 }}>
-                  <Text
-                    style={{
-                      color: '#25334a',
-                      fontFamily: 'WS-Medium',
-                      fontSize: 14,
-                      textAlign: 'center',
-                    }}
-                  >
-                    Total Points Rewarded
-                  </Text>
-                </View>
-                <View style={{ flex: 0.36 }}>
-                  <Text
-                    style={{
-                      color: '#25334a',
-                      fontFamily: 'WS-Medium',
-                      fontSize: 14,
-                      textAlign: 'center',
-                    }}
-                  >
-                    Total Points Redeemed
-                  </Text>
-                </View>
+                width={Dimensions.get('window').width} // from react-native
+                height={220}
+                chartConfig={{
+                  backgroundColor: '#d3d7d0',
+                  backgroundGradientFrom: '#1E2923',
+                  backgroundGradientTo: '#08130D',
+                  decimalPlaces: 2, // optional, defaults to 2dp
+                  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                  style: {
+                    borderRadius: 16
+                  }
+                }}
+                bezier
+                style={{
+                  marginVertical: 8,
+                  borderRadius: 16
+                }}
+
+              />
+            </ScrollView>
+
+
+            <ScrollView style={{marginBottom:10}} horizontal={true}>
+              <BarChart
+                // style={graphStyle}
+                data={{
+                  labels: barChartlavel.length != 0 ? barChartlavel : ["Bottle", "Can", "Candy", "Chips", "Cup", "Other", "Robins"],
+                  datasets: [
+                    {
+                      data: barChartData.length != 0 ? barChartData.data : [0,0,0,0,0,0,0],
+                    }
+                  ],
+                }}
+                width={screenWidth}
+                height={220}
+                chartConfig={{
+                  backgroundColor: '#d3d7d0',
+                  backgroundGradientFrom: '#1E2923',
+                  backgroundGradientTo: '#08130D',
+                  decimalPlaces: 2, // optional, defaults to 2dp
+                  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                  style: {
+                    borderRadius: 16
+                  }
+                }}
+              />
+            </ScrollView>
+
+            <ScrollView horizontal={true}>
+              <View style={{ backgroundColor: "#ffffff" }}>
+                <PieChart
+                  data={pieChartDataOne.length != 0 ? pieChartDataOne : dataPie }
+                  width={screenWidth}
+                  height={220}
+                  chartConfig={{
+                    backgroundColor: '#d3d7d0',
+                    backgroundGradientFrom: '#1E2923',
+                    backgroundGradientTo: '#08130D',
+                    decimalPlaces: 2, // optional, defaults to 2dp
+                    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                    style: {
+                      borderRadius: 16
+                    }
+                  }}
+                  accessor="quantity"
+                  backgroundColor="transparent"
+                  paddingLeft="15"
+                />
               </View>
-            </View>
 
-            <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: -5 }}>
-              <Text style={{ textAlign: 'center', color: '#b7b7b7' }}>|</Text>
-              <Text style={{ textAlign: 'center', color: '#b7b7b7' }}>|</Text>
-              <Text style={{ textAlign: 'center', color: '#b7b7b7', marginRight: '5%' }}>|</Text>
-            </View>
-
-            {data.length > 0 ?
-              <View>
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', paddingVertical: 30 }}>
-                  <View style={{ flex: 0.26, borderColor: '#b7b7b7', borderWidth: 1, borderRadius: 30, alignItems: 'center', alignContent: 'center', marginHorizontal: '6%', paddingVertical: 10 }}>
-                    <Text style={{ textAlign: 'center' }}>{datalength}</Text>
-                  </View>
-
-
-                  <View style={{ flex: 0.37, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', borderColor: '#b7b7b7', borderWidth: 1, borderRadius: 30, height: 40, marginHorizontal: 15 }}>
-                    <View style={{ backgroundColor: '#b7b7b7', width: 26, height: 26, borderRadius: 13, alignItems: 'flex-start' }}>
-                      <Image
-                        style={{ width: 22, height: 23 }}
-                        source={require('../../../assets/img/tab/foot_print/point_img.png')}
-                      />
-                    </View>
-                    <Text style={{ color: '#25334a', fontFamily: 'WS-Medium', textAlign: 'center' }}>{`${totalReward} pts`}</Text>
-                  </View>
-
-
-                  <View style={{ flex: 0.37, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', borderColor: '#b7b7b7', borderWidth: 1, borderRadius: 30, height: 40, marginHorizontal: 15 }}>
-                    <View style={{ backgroundColor: '#b7b7b7', width: 26, height: 26, borderRadius: 13, alignItems: 'flex-start' }}>
-                      <Image
-                        style={{ width: 22, height: 23 }}
-                        source={require('../../../assets/img/tab/foot_print/point_img.png')}
-                      />
-                    </View>
-                    <Text style={{ color: '#25334a', fontFamily: 'WS-Medium', textAlign: 'center' }}>{`${RedeemedPoint} pts`}</Text>
-                  </View>
-
-                </View>
-
-                <View style={{ flex: 1, marginBottom: 15, flexDirection: 'row', borderTopColor: '#b7b7b7', borderTopWidth: 1, paddingVertical: 10, marginHorizontal: 20 }}>
-                  <View style={{ flex: 0.64, alignItems: 'flex-end' }}>
-                    <Text style={{ color: '#25334a', fontFamily: 'WS-SemiBold' }}>Remain Reward</Text>
-                  </View>
-                  <View style={{ flex: 0.25, alignItems: 'flex-end' }}>
-                    <Text style={{ textAlign: 'center', fontFamily: 'WS-SemiBold', color: '#aecb3e' }}>{remainReward}</Text>
-                  </View>
-                </View>
+              <View style={{ backgroundColor: "#ffffff" }}>
+                <PieChart
+                 data={pieChartDataTwo.length != 0 ? pieChartDataTwo : dataPie }
+                  width={screenWidth}
+                  height={220}
+                  chartConfig={{
+                    backgroundColor: '#d3d7d0',
+                    backgroundGradientFrom: '#1E2923',
+                    backgroundGradientTo: '#08130D',
+                    decimalPlaces: 2, // optional, defaults to 2dp
+                    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                    style: {
+                      borderRadius: 16
+                    }
+                  }}
+                  accessor="quantity"
+                  backgroundColor="transparent"
+                  paddingLeft="15"
+                />
               </View>
-              :
-              <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 35 }}>
-                <Text style={{ textAlign: 'center', color: 'gray', fontFamily: 'WS-SemiBold', fontSize: 18 }}>No data found!</Text>
-              </View>
-            }
+
+            </ScrollView>
 
           </ScrollView>
         </View >

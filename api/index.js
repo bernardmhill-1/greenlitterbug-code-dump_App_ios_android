@@ -1065,5 +1065,58 @@ apiCalls.searchRecyclingProduct = (data, cb) => {
   });
 }
 
+apiCalls.ProductBarChart = (data, cb) => {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
+      fetch(url + `/recyclingProductBarChart?user_id=${data.userId}`, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          "cache-control": "no-cache",
+          'Content-Type': 'application/json',
+          'authtoken': data.userToken
+        },
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+          cb(null, responseJson)
+        })
+        .catch((error) => {
+          cb(error);
+        });
+    }
+    else {
+      alert('You are Offline. Please check your connection.')
+    }
+  });
+}
+
+apiCalls.ProductPieChart = (data, cb) => {
+  NetInfo.fetch().then(state => {
+    if (state.isConnected) {
+      fetch(url + `/recyclingProductPieChart?user_id=${data.userId}`, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          "cache-control": "no-cache",
+          'Content-Type': 'application/json',
+          'authtoken': data.userToken
+        },
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+          cb(null, responseJson)
+        })
+        .catch((error) => {
+          cb(error);
+        });
+    }
+    else {
+      alert('You are Offline. Please check your connection.')
+    }
+  });
+}
+
+
 
 module.exports = apiCalls;

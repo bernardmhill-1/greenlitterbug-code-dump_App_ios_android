@@ -16,7 +16,7 @@ export default class MyPoint extends React.Component {
             <Text style={{ textAlign: 'center', color: '#626467', fontFamily: 'WS-Medium' }}>{this.props.place}</Text>
           </View>
           <View style={{ flex: 0.3, alignItems: 'flex-start' }}>
-            <Text style={{ textAlign: 'center', color: '#626467', fontFamily: 'WS-Medium' }}>{this.props.itemList}</Text>
+            <Text style={{ textAlign: 'center', color: '#626467', fontFamily: 'WS-Medium',textAlign:"left" }}>{this.props.itemList}</Text>
           </View>
           <View style={{ flex: 0.28, alignItems: 'center' }}>
             <Text style={{ textAlign: 'center', fontFamily: 'WS-SemiBold', color: '#aecb3e' }}>{this.props.pointCollect}</Text>

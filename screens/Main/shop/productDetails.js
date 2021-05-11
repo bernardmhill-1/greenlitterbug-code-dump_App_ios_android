@@ -42,7 +42,7 @@ export default class ProductDetails extends React.Component {
         marginRight: 18
       },
       headerStyle: {
-        marginTop: -20,
+        marginTop:-10,
         backgroundColor: '#1d2b3a',
         height: 60,
 

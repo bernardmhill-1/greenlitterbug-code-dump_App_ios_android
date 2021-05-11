@@ -52,6 +52,7 @@ export default class EditProfile extends React.Component {
     userId: '',
     image: null,
     filename: '',
+    company:"",
     type: '',
     data: '',
     loading: true,
@@ -59,6 +60,7 @@ export default class EditProfile extends React.Component {
     firstError: '',
     lastError: '',
     phonError: '',
+    company:'',
     isMounted: false
 
   };
@@ -67,7 +69,7 @@ export default class EditProfile extends React.Component {
     let reg =/^[A-Za-z0-9 ]+$/;
     
 
-    if (this.state.fName == '' && this.state.lName == '' && this.state.pNumber == '') {
+    if (this.state.fName == '' && this.state.lName == '' && this.state.pNumber == '' && this.state.company == '') {
       this.setState({ emailError: 'All fields are Requried' })
     } else {
       this.setState({ emailError: '' })
@@ -86,6 +88,11 @@ export default class EditProfile extends React.Component {
       this.setState({ phonError: 'Phone No Should be  10 Digits long' })
     } else if (name === 'pNumber' && (value.length < 10 || value !== '')) {
       this.setState({ phonError: '' })
+    }
+    if (name === 'company' && (!reg.test(value)) || value === '') {
+      this.setState({ lastError: 'company is requried' })
+    } else if (name === 'company' && value !== '') {
+      this.setState({ companyError: '' })
     }
     this.setState({ [name]: value, isDirty: true })
 
@@ -151,7 +158,8 @@ export default class EditProfile extends React.Component {
       userId: this.state.userId,
       firstName: this.state.fName,
       lastName: this.state.lName,
-      phoneNo: this.state.pNumber
+      phoneNo: this.state.pNumber,
+      company:this.state.company
     },
       (e, r) => {
         if (e) {
@@ -247,6 +255,7 @@ export default class EditProfile extends React.Component {
               image: r.response_data.profile_image,
               lName: r.response_data.last_name,
               pNumber: r.response_data.phone_no,
+              company:r.response_data.company,
               loading: false,
               isMounted: true
             })
@@ -286,7 +295,7 @@ export default class EditProfile extends React.Component {
   }
 
   render() {
-    const { firstError, lastError, phonError, isDirty } = this.state;
+    const { firstError, lastError, phonError,companyError, isDirty } = this.state;
     return (
       <View style={{ flex: 1, marginHorizontal: 50 }}>
         { Platform.OS == "android" &&
@@ -413,13 +422,39 @@ export default class EditProfile extends React.Component {
               </View>
             </View>
             <Text style={{ textAlign: 'center', color: 'red', fontFamily: 'WS-Regular', fontSize: 14 }}>{this.state.phonError}</Text>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', borderRadius: 30, borderColor: '#d6d6d6', borderWidth: 1, marginBottom: 5 }}>
+              <View style={{ flex: 0.15, alignItems: 'flex-end' }}>
+                <SimpleLineIcons
+                  name="user"
+                  size={20}
+                  color="#d6d6d6"
+                />
+              </View>
+              <View style={{ flex: 0.85 }}>
+                <TextInput
+                  style={{ paddingVertical: 10, paddingHorizontal: 20, fontSize: 14, fontFamily: 'WS-Light' }}
+                  onChangeText={(company) => this.onChange('company', company)}
+                  value={this.state.company}
+                  placeholder="Company"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  textContentType='givenName'
+                  selectTextOnFocus={true}
+                  spellCheck={false}
+                  keyboardType={'default'}
+
+                />
+              </View>
+            </View>
+            <Text style={{ textAlign: 'center', color: 'red', fontFamily: 'WS-Regular', fontSize: 14 }}>{this.state.companyError}</Text>
           </View>
 
-
+          
           <View style={{ marginBottom: 30 }}>
             <CustomButton
               text="UPDATE"
-              disabled={firstError || lastError || phonError || !isDirty ? true : false}
+              disabled={firstError || lastError || phonError || companyError || !isDirty ? true : false}
               onClick={this.fetchAPI}
             />
           </View>

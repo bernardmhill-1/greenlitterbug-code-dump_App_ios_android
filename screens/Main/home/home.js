@@ -10,8 +10,9 @@ import {
   Alert,
   SafeAreaView,
   FlatList,
-  AlertIOS,
-  StatusBar
+  Image,
+  StatusBar,
+  ImageBackground
 } from 'react-native';
 import { MaterialIcons, } from '@expo/vector-icons';
 import { RadioButton } from 'react-native-paper';
@@ -25,6 +26,7 @@ import Card from '../../../components/card';
 import CausesList from './causesList';
 import Loader from '../../../navigation/AuthLoadingScreen'
 import { CartCount } from '../../../components/cartCounter'
+import Donut from "../../../components/circle"
 import { CheckBox } from 'react-native-elements'
 
 const api = require('../../../api/index');
@@ -32,46 +34,50 @@ const api = require('../../../api/index');
 
 const SLIDER_1_FIRST_ITEM = 0;
 const SLIDER_2_FIRST_ITEM = 0
-
+var i = 5;
 export default class Home extends React.Component {
-  static navigationOptions = ({ navigation }) => {
-    const { params = {} } = navigation.state;
+  // static navigationOptions = ({ navigation }) => {
+  //   const { params = {} } = navigation.state;
 
-    return {
-      title: 'Home',
-      headerLeft: (
-        <TouchableOpacity
-          onPress={() => navigation.toggleDrawer()}
-          style={{ justifyContent: 'center', alignItems: 'center', padding: 8, marginLeft: 10, borderRadius: 25 }}
-          underlayColor={"rgba(0,0,0,0.32)"}
-        >
-          <MaterialIcons
-            name='dehaze'
-            size={25}
-            color='#fff'
-          />
-        </TouchableOpacity>
-      ),
-      headerRight: (
-        <CartCount count={params.cartCount} onClick={() => navigation.navigate('myCartList')} />
-      ),
-      headerRightContainerStyle: {
-        marginRight: 18
-      },
-      headerStyle: {
-        marginTop: -20,
-        backgroundColor: '#1d2b3a',
-        height: 60,
+  //   return {
+  //     title: 'Home',
+  //     headerLeft: (
+  //       <TouchableOpacity
+  //         onPress={() => navigation.toggleDrawer()}
+  //         style={{ justifyContent: 'center', alignItems: 'center', padding: 8, marginLeft: 10, borderRadius: 25 }}
+  //         underlayColor={"rgba(0,0,0,0.32)"}
+  //       >
+  //         <MaterialIcons
+  //           name='dehaze'
+  //           size={25}
+  //           color='#fff'
+  //         />
+  //       </TouchableOpacity>
+  //     ),
+  //     headerRight: (
+  //       <CartCount count={params.cartCount} onClick={() => navigation.navigate('myCartList')} />
+  //     ),
+  //     headerRightContainerStyle: {
+  //       marginRight: 18
+  //     },
+  //     headerStyle: {
+  //       marginTop: -20,
+  //       backgroundColor: '#1d2b3a',
+  //       height: 60,
 
-      },
-      headerTintColor: '#ffffff',
-      headerTitleStyle: {
-        fontFamily: 'WS-Light',
-        fontSize: 18
-      },
+  //     },
+  //     headerTintColor: '#ffffff',
+  //     headerTitleStyle: {
+  //       fontFamily: 'WS-Light',
+  //       fontSize: 18
+  //     },
 
-    }
-  }
+  //   }
+  // }
+
+  static navigationOptions = {
+    header: null
+  };
 
   state = {
     value: 'second',
@@ -88,7 +94,16 @@ export default class Home extends React.Component {
     loading: true,
     VendresList: [],
     productList: [],
+    data: [],
+    totalReward: {},
+    remainReward: "",
+    totalWeight: "",
+    fName: "",
+    lName: "",
+    image: "",
+    comapny: "",
     featuredAdsList: [],
+
     cartCount: 0,
     isMounted: false
   }
@@ -142,6 +157,8 @@ export default class Home extends React.Component {
           });
           this.featuredVendor();
           this.featuredAdsList();
+          this.ProductListByUser()
+          this.viewProfileDetails()
         }
       })
     })
@@ -154,6 +171,8 @@ export default class Home extends React.Component {
       () => {
         this.featuredVendor();
         this.featuredAdsList();
+        this.ProductListByUser()
+         this.viewProfileDetails()
       }
     )
   }
@@ -202,6 +221,8 @@ export default class Home extends React.Component {
 
 
 
+
+
   featuredVendor = async () => {
     await api.home({
       userToken: this.state.userToken,
@@ -220,7 +241,7 @@ export default class Home extends React.Component {
           //CATCH THE ERROR IN DEVELOPMENT 
         } else {
           if (r.response_code === 2000) {
-            console.log("home data ----",r)
+            console.log("home data ----", r)
             this.setState({ VendresList: r.response_data.featuredVendor, productList: r.response_data.popularProduct, loading: false, isMounted: true }, () => {
               this.state.VendresList.push({ text: 'View More' })
               this.state.productList.push({ text: 'View More' })
@@ -307,6 +328,92 @@ export default class Home extends React.Component {
       })
   }
 
+  ProductListByUser = async () => {
+    this.setState({ loading: true })
+    await api.ProductListByUser({
+      userId: this.state.userId,
+      userToken: this.state.userToken
+    },
+      (e, r) => {
+        if (e) {
+          this.setState({ loading: false, isMounted: true })
+          // (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+          //   'Error', e,
+          //   [
+          //     {
+          //       text: 'OK', onPress: () => this.setState({ loading: false})
+          //     }
+          //   ]
+          // );
+          //CATCH THE ERROR IN DEVELOPMENT 
+        } else {
+          if (r.response_code == 2000) {
+            console.log("mnoiuy-----", r)
+            this.setState({
+              data: r.response_data.list,
+              totalReward: r.response_data.totalReward.totalReward,
+              remainReward: r.response_data.totalReward.remainReward,
+              totalWeight: r.response_data.totalWeight,
+              loading: false,
+              isMounted: true
+            })
+          } else {
+            this.setState({ loading: false, isMounted: true });
+            //CATCH THE ERROR IN DEVELOPMENT 
+
+            // (Platform.OS === 'android' ? Alert : AlertIOS).alert(
+            //   'Request failed', r.response_message,
+            //   [
+            //     {
+            //       text: 'OK', onPress: () => this.setState({ loading: false})
+            //     }
+            //   ]
+            // );
+          }
+        }
+      })
+  }
+
+  viewProfileDetails = async () => {
+    await api.viewProfile({
+      userId: this.state.userId,
+      userToken: this.state.userToken
+    },
+      (e, r) => {
+        if (e) {
+          Alert.alert(
+            'Error', e,
+            [
+              {
+                text: 'OK', onPress: () => this.setState({ loading: false })
+              }
+            ]
+          );
+        } else {
+          if (r.response_code == 2000) {
+            this.setState({
+              fName: r.response_data.first_name,
+              image: r.response_data.profile_image,
+              lName: r.response_data.last_name,
+              company: r.response_data.company,
+              loading: false,
+              isMounted: true
+            })
+            //	Alert.alert('Success', r.response_message);
+          } else {
+            Alert.alert(
+              'Request failed', JSON.stringify(r.response_message),
+              [
+                {
+                  text: 'OK', onPress: () => this.setState({ loading: false })
+                }
+              ]
+            );
+          }
+        }
+      })
+  }
+
   _renderItemWithParallax = ({ item, index }, parallaxProps) => {
     //  console.log('nav:',item.content)
     return (
@@ -369,7 +476,7 @@ export default class Home extends React.Component {
 
 
   render() {
-    const { searchKey, causesdata } = this.state;
+    const { searchKey, causesdata, totalReward, totalWeight, remainReward } = this.state;
     const { slider1ActiveSlide } = this.state;
     const example1 = this.mainExample(1);
     const regex = /(<([^>]+)>)/ig;
@@ -382,7 +489,7 @@ export default class Home extends React.Component {
     } else {
       return (
         <View style={{ flex: 1, marginTop: 5 }}>
-          { Platform.OS == "android" &&
+          {Platform.OS == "android" &&
             <StatusBar translucent={true} backgroundColor={'transparent'} />}
           <ScrollView
             alwaysBounceVertical={true}
@@ -390,6 +497,50 @@ export default class Home extends React.Component {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ paddingVertical: 10 }}
           >
+
+            <ImageBackground
+              style={{ width: "100%", height: 370 }}
+              source={require("../../../assets/img/home/img.png")}
+            >
+              <View style={{ flexDirection: "row", marginTop: 20,marginBottom:41 }}>
+                <TouchableOpacity
+                  style={{ flex: 0.29, alignItems: "center" }}
+                  onPress={() => this.props.navigation.navigate("EditProfile")}
+                >
+                  {
+                    this.state.image != "" ?
+                      <Image
+                        style={{ width: 80, height: 80, borderRadius: 40, borderWidth: 2, borderColor: '#3e9126' }}
+                        source={{uri:this.state.image}}
+                      />
+                      :
+                      <Image
+
+                        style={{ width: 80, height: 80 }}
+                        source={require("../../../assets/img/home/user.png")}
+                      />
+                  }
+                </TouchableOpacity>
+                <View style={{ flex: 0.79, alignItems: "flex-start" }}>
+                  <Text style={{ color: "#fffefd", fontSize: 18, fontWeight: "800", marginBottom: 4 }}>End User</Text>
+                  <Text style={{ color: "#fffefd", fontSize: 18, fontWeight: "800", marginBottom: 4 }}>USERNAME <Text style={{ color: "#ece3dd", fontSize: 16, fontWeight: "500", marginBottom: 4 }}>{`${this.state.fName}${this.state.lName}`}</Text></Text>
+                  <Text style={{ color: "#fffefd", fontSize: 18, fontWeight: "800" }}>COMPANY <Text style={{ color: "#ece3dd", fontSize: 16, fontWeight: "500" }}>{this.state.company}</Text></Text>
+                </View>
+              </View>
+              <View style={{}}>
+                <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                <Donut percentage={100} color={"#69d14b"} delay={500 + 100 * i} max={totalWeight ? totalWeight :0 } textColor="#ffffff" />
+                <Donut percentage={100} color={"#69d14b"} delay={500 + 100 * i} max={totalReward ?totalReward :0 } textColor="#ffffff" />
+                <Donut percentage={100} color={"#69d14b"} delay={500 + 100 * i} max={remainReward ? remainReward :0} textColor="#ffffff" />
+                </View>
+                <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: 10 }}>
+                  <Text style={{ color: "#ffffff", fontSize: 16, fontWeight: "bold", textAlign: "center" }}>GHG {'\n'} REDUCED</Text>
+                  <Text style={{ color: "#ffffff", fontSize: 16, fontWeight: "bold", textAlign: "center", marginLeft: 10 }}>ITEMS {'\n'} RECYCLED</Text>
+                  <Text style={{ color: "#ffffff", fontSize: 16, fontWeight: "bold", textAlign: "center" }}>POINTS {'\n'}  EARNED</Text>
+                </View>
+              </View>
+
+            </ImageBackground>
 
             <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, marginBottom: 5 }}>
               {/* <RadioButton.Group
@@ -590,6 +741,16 @@ export default class Home extends React.Component {
             }
 
           </ScrollView>
+
+          <TouchableOpacity
+            style={{ position: "absolute", bottom: 20, padding: 10, right: 20 }}
+            onPress={() => this.props.navigation.navigate("Scan")}
+          >
+            <Image
+              style={{ width: 80, height: 80 }}
+              source={require("../../../assets/img/home/qr-code.png")}
+            />
+          </TouchableOpacity>
 
         </View>
       );

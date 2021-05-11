@@ -31,7 +31,7 @@ const {
   Text,
   useColorScheme,
   View,
-  LogBox,
+  YellowBox,
 } = require('react-native');
 
 import type {RNTesterExample} from './types/RNTesterTypes';
@@ -42,7 +42,9 @@ import type {ColorSchemeName} from '../../Libraries/Utilities/NativeAppearance';
 
 type Props = {exampleFromAppetizeParams?: ?string, ...};
 
-LogBox.ignoreLogs(['Module RCTImagePickerManager requires main queue setup']);
+YellowBox.ignoreWarnings([
+  'Module RCTImagePickerManager requires main queue setup',
+]);
 
 const APP_STATE_KEY = 'RNTesterAppState.v2';
 

@@ -270,7 +270,7 @@ export default class ProductUpload extends React.Component {
     formData.append('barCode',null)
     this.setState({ loading: true });
 
-    await fetch('https://nodeserver.brainiuminfotech.com:1924/api/recyclingProductAdd', {
+    await fetch('https://nodeserver.mydevfactory.com:1924/api/recyclingProductAdd', {
       method: 'POST',
       headers: {
         Accept: 'application/json',

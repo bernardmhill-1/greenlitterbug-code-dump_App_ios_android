@@ -313,7 +313,7 @@ export default class BarCodeScan extends React.Component {
     } else {
       return (
         <View style={{ flex: 1, backgroundColor: '#334259' }}>
-          { Platform.OS == "android" &&
+          {Platform.OS == "android" &&
             <StatusBar translucent={true} backgroundColor={'transparent'} />}
           <ScrollView
             alwaysBounceVertical={true}
@@ -353,7 +353,17 @@ export default class BarCodeScan extends React.Component {
                 <BarCodeScanner
                   onBarCodeScanned={this.handleBarCodeScanned}
                   style={[StyleSheet.absoluteFill, styles.container]}>
-                  <Text style={styles.description}>Scan your Bar code</Text>
+                  <View style={{ width: "80%", borderColor: '#69d14b', borderWidth: 3 }}>
+                    <Text style={{ fontSize: 24 }}>Earn rewards in 2 small step!</Text>
+                    <Text style={styles.description}>First, scan the QR code a</Text>
+                    <Text style={styles.description}>recycling bin near you.</Text>
+                  </View>
+                  <View>
+                    <Image
+                      style={{ width: 50, height: 50, position: "absolute", left: 30, top: 40 }}
+                      source={require('../../../assets/img/barcode_Scanner/cartton.png')}
+                    />
+                  </View>
                   <Image
                     style={styles.qr}
                     source={require('../../../assets/img/barcode_Scanner/bar_code.png')}
@@ -383,7 +393,7 @@ export default class BarCodeScan extends React.Component {
                 <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 14, marginBottom: 5 }}>{`Product Name : ${barCodeDetails.name}`} </Text>
                 <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 14, }}>{`product Type: ${barCodeDetails.RecyclingProductType}`} </Text>
               </View> :
-              <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Regular', fontSize: 16, marginBottom: 15, marginTop: -10 }}>Tap above to scan Bar code</Text>
+              <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Regular', fontSize: 16, marginBottom: 15, marginTop: -10 }}>Tap square to scan Bar code</Text>
             }
             <View>
 
@@ -443,7 +453,6 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: width * 0.09,
-    marginTop: '10%',
     textAlign: 'center',
     width: '70%',
     color: 'white',
