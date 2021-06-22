@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform, ScrollView, Text, TouchableOpacity, View, FlatList, AsyncStorage, Alert, AlertIOS } from 'react-native';
+import { Platform, ScrollView, Text, SafeAreaView, View, FlatList, AsyncStorage, Alert, AlertIOS } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { RadioButton, Searchbar } from 'react-native-paper';
 import { CustomButton } from '../../../components/Button';
@@ -35,7 +35,6 @@ export default class myCartList extends React.Component {
         marginRight: 18
       },
       headerStyle: {
-        marginTop: -20,
         backgroundColor: '#1d2b3a',
         height: 60,
 
@@ -277,6 +276,7 @@ export default class myCartList extends React.Component {
       )
     } else {
       return (
+        <SafeAreaView style={{flex:1}}>
         <View style={{ flex: 1 }}>
           <ScrollView
             alwaysBounceVertical
@@ -407,6 +407,7 @@ export default class myCartList extends React.Component {
             />
           </View>
         </View>
+        </SafeAreaView>
       );
     }
   }

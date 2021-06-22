@@ -13,7 +13,8 @@ import {
   Modal,
   Alert,
   AlertIOS,
-  StatusBar
+  StatusBar,
+ SafeAreaView
 } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import * as Permissions from 'expo-permissions'
@@ -50,7 +51,6 @@ export default class Scan extends React.Component {
         marginRight: 18
       },
       headerStyle: {
-        marginTop: -20,
         backgroundColor: '#1d2b3a',
         height: 60,
 
@@ -96,17 +96,17 @@ export default class Scan extends React.Component {
       })
       const { status } = await Permissions.askAsync(Permissions.CAMERA);
       this.setState({ hasCameraPermission: status === 'granted' });
-      // this.getPermissionAsync();
+       this.getPermissionAsync();
     })
   }
 
-  // getPermissionAsync = async () => {
-  //   const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-  //   if (status !== 'granted') {
-  //     (Platform.OS === 'android' ? Alert : AlertIOS).alert('Sorry', 'we need camera roll permissions to make this work!');
-  //   }
+  getPermissionAsync = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    if (status !== 'granted') {
+      (Platform.OS === 'android' ? Alert : AlertIOS).alert('Sorry', 'we need camera roll permissions to make this work!');
+    }
 
-  // }
+  }
 
   componentWillUnmount = () => {
     this.willFocusListener.remove();
@@ -138,6 +138,7 @@ export default class Scan extends React.Component {
     const { data } = this.state;
     console.log('data:', data)
     return (
+      <SafeAreaView style={{flex:1}}>
       <View style={{ flex: 1, backgroundColor: '#334259' }}>
         { Platform.OS == "android" &&
             <StatusBar translucent={true} backgroundColor={'transparent'} />}
@@ -183,7 +184,7 @@ export default class Scan extends React.Component {
                 <Text style={{fontSize: width * 0.05,color:"gray",textAlign:"center"}}>First, scan the QR code a recycling bin near you.</Text>
                 </View>
                 
-                <View style={{position:"absolute",top:60,left:13}}>
+                <View style={{position:"absolute",top:60,left:13,elevation:2}}>
                 <Image
                   style={{width:60,height:60}}
                   source={require('../../../assets/img/barcode_Scanner/cartton.png')}
@@ -208,7 +209,7 @@ export default class Scan extends React.Component {
             <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 16 }}>{`Product Category: ${data.productcategory}`} </Text>
             <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Medium', fontSize: 16}}>{`Location: ${data.location}`} </Text>
           </View> :
-            <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Regular', fontSize: 16, marginBottom: 15, marginTop: -10 }}>Tap above to scan QR code</Text>
+            <Text style={{ textAlign: 'center', color: '#ffffff', fontFamily: 'WS-Regular', fontSize: 16, marginBottom: 15, marginTop: -10 }}>Tap square  to scan QR code</Text>
           }
           {/* 
           <View style={{ borderRadius: 30, borderWidth: 1, borderColor: '#fff', marginHorizontal: '25%', paddingVertical: 15, backgroundColor: '#1d283a', marginBottom: 40, alignItems: 'center' }}>
@@ -225,6 +226,7 @@ export default class Scan extends React.Component {
 
         </ScrollView>
       </View >
+      </SafeAreaView>
     );
   }
 }

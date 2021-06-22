@@ -6,8 +6,7 @@ import {
   View,
   FlatList,
   AsyncStorage,
-  Alert,
-  AlertIOS
+SafeAreaView
 
 } from 'react-native';
 import { RadioButton } from 'react-native-paper';
@@ -32,7 +31,6 @@ export default class MyOrder extends React.Component {
         marginRight: 18
       },
       headerStyle: {
-        marginTop: -20,
         backgroundColor: '#1d2b3a',
         height: 60,
 
@@ -147,6 +145,7 @@ export default class MyOrder extends React.Component {
       )
     } else {
       return (
+        <SafeAreaView style={{flex:1}}>
         <View style={{ flex: 1, marginTop: 5 }}>
           <ScrollView
             alwaysBounceVertical={true}
@@ -214,6 +213,7 @@ export default class MyOrder extends React.Component {
             }
           </ScrollView>
         </View >
+        </SafeAreaView>
       );
     }
   }

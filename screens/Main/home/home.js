@@ -12,7 +12,7 @@ import {
   FlatList,
   Image,
   StatusBar,
-  ImageBackground
+  ImageBackground,
 } from 'react-native';
 import { MaterialIcons, } from '@expo/vector-icons';
 import { RadioButton } from 'react-native-paper';

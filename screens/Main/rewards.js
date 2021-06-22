@@ -10,7 +10,8 @@ import {
   AsyncStorage,
   Alert,
   AlertIOS,
-  StatusBar
+  StatusBar,
+  SafeAreaView
 } from 'react-native';
 import { MaterialIcons, } from '@expo/vector-icons';
 import { RadioButton } from 'react-native-paper';
@@ -48,7 +49,6 @@ export default class Rewards extends React.Component {
         marginRight: 18
       },
       headerStyle: {
-        marginTop: -20,
         backgroundColor: '#1d2b3a',
         height: 60,
 
@@ -162,6 +162,7 @@ export default class Rewards extends React.Component {
       )
     } else {
       return (
+        <SafeAreaView style={{flex:1}}>
         <View style={{ flex: 1, marginTop: 10 }}>
           { Platform.OS == "android" &&
             <StatusBar translucent={true} backgroundColor={'transparent'} />}
@@ -257,6 +258,7 @@ export default class Rewards extends React.Component {
 
           </ScrollView>
         </View >
+        </SafeAreaView>
       );
     }
   }

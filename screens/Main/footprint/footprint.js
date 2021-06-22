@@ -10,7 +10,8 @@ import {
   AsyncStorage,
   Alert,
   AlertIOS,
-  Dimensions
+  Dimensions,
+  SafeAreaView
 
 } from 'react-native';
 import { MaterialIcons, } from '@expo/vector-icons';
@@ -68,7 +69,6 @@ export default class FootPrint extends React.Component {
         marginRight: 18
       },
       headerStyle: {
-        marginTop: -20,
         backgroundColor: '#1d2b3a',
         height: 60,
 
@@ -287,6 +287,7 @@ export default class FootPrint extends React.Component {
       )
     } else {
       return (
+        <SafeAreaView style={{flex:1}}>
         <View style={{ flex: 1,marginTop: 30,backgroundColor:"white"}}>
           <ScrollView
             alwaysBounceVertical={true}
@@ -413,6 +414,7 @@ export default class FootPrint extends React.Component {
 
           </ScrollView>
         </View >
+        </SafeAreaView>
       );
     }
   }

@@ -10,8 +10,6 @@ import {
   AsyncStorage,
   Alert,
   StyleSheet,
-  AlertIOS,
-  ToastAndroid
 } from 'react-native';
 import { AntDesign, EvilIcons,MaterialIcons } from '@expo/vector-icons';
 import { RadioButton } from 'react-native-paper';
@@ -42,7 +40,6 @@ export default class ProductDetails extends React.Component {
         marginRight: 18
       },
       headerStyle: {
-        marginTop:-10,
         backgroundColor: '#1d2b3a',
         height: 60,
 
@@ -311,6 +308,7 @@ export default class ProductDetails extends React.Component {
       )
     } else {
       return (
+        <SafeAreaView style={{flex:1}}>
         <View style={{ flex: 1 }}>
           <ScrollView
             alwaysBounceVertical={true}
@@ -445,6 +443,7 @@ export default class ProductDetails extends React.Component {
             }
           </ScrollView>
         </View>
+        </SafeAreaView>
       );
     }
   }

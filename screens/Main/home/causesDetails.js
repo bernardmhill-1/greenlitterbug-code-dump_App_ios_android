@@ -41,7 +41,6 @@ export default class CausesDetails extends React.Component {
         marginRight: 18
       },
       headerStyle: {
-        marginTop: -20,
         backgroundColor: '#1d2b3a',
         height: 60,
 
@@ -202,6 +201,7 @@ export default class CausesDetails extends React.Component {
       )
     } else {
     return (
+      <SafeAreaView style={{flex:1}}>
       <View style={{ flex: 1 }}>
         { Platform.OS == "android" &&
             <StatusBar translucent={true} backgroundColor={'transparent'} />}
@@ -248,6 +248,7 @@ export default class CausesDetails extends React.Component {
 
         </ScrollView>
       </View>
+      </SafeAreaView>
     );
   }
 }

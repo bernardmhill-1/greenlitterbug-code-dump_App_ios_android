@@ -13,7 +13,8 @@ import {
   Modal,
   StyleSheet,
   AlertIOS,
-  StatusBar
+  StatusBar,
+  SafeAreaView
 } from 'react-native';
 import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
@@ -39,7 +40,6 @@ export default class ProductUpload extends React.Component {
         marginRight: 18
       },
       headerStyle: {
-        marginTop: -20,
         backgroundColor: '#1d2b3a',
         height: 60,
 
@@ -282,6 +282,7 @@ export default class ProductUpload extends React.Component {
     })
       .then(response => response.json())
       .then(async (response) => {
+        console.log("heoooooo",response)
         if (response.response_code === 2000) {
 
           const push = response.response_data.pushData
@@ -355,6 +356,7 @@ render() {
     } else {
 
       return (
+        <SafeAreaView style={{flex:1}}>
         <View style={{ flex: 1, backgroundColor: '#334259' }}>
           { Platform.OS == "android" &&
             <StatusBar translucent={true} backgroundColor={'transparent'} />}
@@ -527,6 +529,7 @@ render() {
 
           </ScrollView>
         </View >
+        </SafeAreaView>
       );
     }
   }

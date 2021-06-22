@@ -5,9 +5,7 @@ import {
   TouchableOpacity,
   View,
   AsyncStorage,
-  Alert,
-  AlertIOS,
-  Platform
+  SafeAreaView
 
 } from 'react-native';
 import { MaterialIcons, AntDesign, EvilIcons, } from '@expo/vector-icons';
@@ -40,7 +38,6 @@ export default class OrderConfirmation extends React.Component {
         marginRight: 18
       },
       headerStyle: {
-        marginTop: -20,
         backgroundColor: '#1d2b3a',
         height: 60,
 

@@ -10,7 +10,8 @@ import {
   AsyncStorage,
   Alert,
   AlertIOS,
-  StatusBar
+  StatusBar,
+  SafeAreaView
 } from "react-native";
 
 import { SimpleLineIcons, MaterialIcons } from '@expo/vector-icons';
@@ -30,7 +31,6 @@ export default class EditProfile extends React.Component {
         marginRight: 18
       },
       headerStyle: {
-        marginTop: -20,
         backgroundColor: '#1d2b3a',
         height: 60,
 
@@ -297,6 +297,7 @@ export default class EditProfile extends React.Component {
   render() {
     const { firstError, lastError, phonError,companyError, isDirty } = this.state;
     return (
+      <SafeAreaView style={{flex:1}}>
       <View style={{ flex: 1, marginHorizontal: 50 }}>
         { Platform.OS == "android" &&
             <StatusBar translucent={true} backgroundColor={'transparent'} />}
@@ -467,6 +468,7 @@ export default class EditProfile extends React.Component {
 
         </ScrollView>
       </View>
+      </SafeAreaView>
     );
 
   }

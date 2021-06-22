@@ -13,7 +13,8 @@ import {
   Modal,
   Alert,
   AlertIOS,
-  StatusBar
+  StatusBar,
+  SafeAreaView
 } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import Constants from 'expo-constants';
@@ -40,7 +41,6 @@ export default class BarCodeScan extends React.Component {
         marginRight: 18
       },
       headerStyle: {
-        marginTop: -20,
         backgroundColor: '#1d2b3a',
         height: 60,
 
@@ -95,9 +95,9 @@ export default class BarCodeScan extends React.Component {
       this.setState({ product_Category })
       const location_value = this.props.navigation.state.params.location;
       this.setState({ location_value })
-      const { status } = await Permissions.askAsync(Permissions.CAMERA);
-      this.setState({ hasCameraPermission: status === 'granted' });
-      this.getPermissionAsync();
+      // const { status } = await Permissions.askAsync(Permissions.CAMERA);
+      // this.setState({ hasCameraPermission: status === 'granted' });
+      // this.getPermissionAsync();
     })
   }
 
@@ -112,13 +112,13 @@ export default class BarCodeScan extends React.Component {
     );
   }
 
-  getPermissionAsync = async () => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-    if (status !== 'granted') {
-      (Platform.OS === 'android' ? Alert : AlertIOS).alert('Sorry', 'we need camera roll permissions to make this work!');
-    }
+  // getPermissionAsync = async () => {
+  //   const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+  //   if (status !== 'granted') {
+  //     (Platform.OS === 'android' ? Alert : AlertIOS).alert('Sorry', 'we need camera roll permissions to make this work!');
+  //   }
 
-  }
+  // }
 
   componentWillUnmount = () => {
     this.willFocusListener.remove();
@@ -226,7 +226,7 @@ export default class BarCodeScan extends React.Component {
     formData.append('barcodeId', barCodeDetails._id)
     this.setState({ loading: true });
 
-    await fetch('https://nodeserver.brainiuminfotech.com:1924/api/recyclingProductAdd', {
+    await fetch('https://nodeserver.mydevfactory.com:1924/api/recyclingProductAdd', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -312,6 +312,7 @@ export default class BarCodeScan extends React.Component {
       )
     } else {
       return (
+        <SafeAreaView style={{flex:1}}>
         <View style={{ flex: 1, backgroundColor: '#334259' }}>
           {Platform.OS == "android" &&
             <StatusBar translucent={true} backgroundColor={'transparent'} />}
@@ -353,17 +354,7 @@ export default class BarCodeScan extends React.Component {
                 <BarCodeScanner
                   onBarCodeScanned={this.handleBarCodeScanned}
                   style={[StyleSheet.absoluteFill, styles.container]}>
-                  <View style={{ width: "80%", borderColor: '#69d14b', borderWidth: 3 }}>
-                    <Text style={{ fontSize: 24 }}>Earn rewards in 2 small step!</Text>
-                    <Text style={styles.description}>First, scan the QR code a</Text>
-                    <Text style={styles.description}>recycling bin near you.</Text>
-                  </View>
-                  <View>
-                    <Image
-                      style={{ width: 50, height: 50, position: "absolute", left: 30, top: 40 }}
-                      source={require('../../../assets/img/barcode_Scanner/cartton.png')}
-                    />
-                  </View>
+                   <Text style={styles.description}>Scan your Bar code</Text>
                   <Image
                     style={styles.qr}
                     source={require('../../../assets/img/barcode_Scanner/bar_code.png')}
@@ -434,6 +425,7 @@ export default class BarCodeScan extends React.Component {
 
           </ScrollView>
         </View >
+        </SafeAreaView>
       );
     }
   }
@@ -456,6 +448,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     width: '70%',
     color: 'white',
+    marginTop:30
   },
   cancel: {
     fontSize: width * 0.05,

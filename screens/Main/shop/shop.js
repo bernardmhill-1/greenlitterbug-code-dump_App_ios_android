@@ -11,7 +11,8 @@ import {
   Picker,
   AsyncStorage,
   Alert,
-  AlertIOS
+  AlertIOS,
+  SafeAreaView,
 
 } from 'react-native';
 import { MaterialIcons, AntDesign, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -49,7 +50,6 @@ export default class ProductListing extends React.Component {
         marginRight: 18
       },
       headerStyle: {
-        marginTop: -20,
         backgroundColor: '#1d2b3a',
         height: 60,
 
@@ -252,6 +252,7 @@ export default class ProductListing extends React.Component {
       )
     } else {
       return (
+        <SafeAreaView style={{flex:1}}>
         <View style={{ flex: 1 }}>
           <ScrollView
             alwaysBounceVertical={true}
@@ -396,6 +397,7 @@ export default class ProductListing extends React.Component {
 
           </ScrollView>
         </View >
+        </SafeAreaView>
       );
     }
   }

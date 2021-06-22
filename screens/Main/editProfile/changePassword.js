@@ -8,7 +8,8 @@ import {
   Alert,
   AlertIOS,
   Platform,
-  StatusBar
+  StatusBar,
+  SafeAreaView
 } from 'react-native';
 import { EvilIcons } from "@expo/vector-icons";
 import { CustomButton } from '../../../components/Button'
@@ -21,7 +22,6 @@ export default class ChangePassword extends Component {
     title: 'Change Password',
 
     headerStyle: {
-      marginTop: -20,
       backgroundColor: '#1d2b3a',
       height: 60,
     },
@@ -124,6 +124,7 @@ export default class ChangePassword extends Component {
   render() {
     const { currError, newError, cnfError, isDirty } = this.state
     return (
+      <SafeAreaView style={{flex:1}}>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginHorizontal: 50 }}>
         { Platform.OS == "android" &&
             <StatusBar translucent={true} backgroundColor={'transparent'} />}
@@ -230,6 +231,7 @@ export default class ChangePassword extends Component {
 
         />
       </View>
+      </SafeAreaView>
     )
   }
 }

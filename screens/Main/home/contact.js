@@ -10,7 +10,8 @@ import {
   AsyncStorage,
   Alert,
   AlertIOS,
-  StatusBar
+  StatusBar,
+  SafeAreaView
 
 } from 'react-native';
 import { SimpleLineIcons, MaterialCommunityIcons, } from '@expo/vector-icons';
@@ -23,7 +24,6 @@ export default class Contact extends React.Component {
   static navigationOptions = {
     title: 'Contact',
     headerStyle: {
-      marginTop: -20,
       backgroundColor: '#1d2b3a',
       height: 60,
     },
@@ -172,6 +172,7 @@ export default class Contact extends React.Component {
       )
     } else {
       return (
+        <SafeAreaView style={{flex:1}}>
         <View style={{ flex: 1, marginTop: 10 }}>
           { Platform.OS == "android" &&
             <StatusBar translucent={true} backgroundColor={'transparent'} />}
@@ -345,6 +346,7 @@ export default class Contact extends React.Component {
 
           </ScrollView>
         </View>
+        </SafeAreaView>
       );
     }
   }
